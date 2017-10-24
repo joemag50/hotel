@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class Usuarios extends Menu implements ActionListener
 	public ArrayList<ResultSet> r;
 	public JButton buscar;
 	public JLabel usuarios;
-	
+	public JList lista;
 	Usuarios ()
 	{
 		//JCGE: Propiedades Generales
@@ -88,17 +89,34 @@ public class Usuarios extends Menu implements ActionListener
 		usuarios = new JLabel("Usuarios actuales: ");
 		x += 120; usuarios.setBounds(x,70,150,h);
 		panelCentro.add(usuarios);
+		listaUsuarios(lista, panelCentro, x, 90, 200, y-90);
 		
-		String[] toppings = {"Pepperoni","Sausage","Linguica","Canadian Bacon","Salami","Tuna", "Olives", "Mushrooms", "Tomatoes","Pineapple","Kiwi","GummyWorms"};
-		JList list1 = new JList(toppings);
-		list1.setVisibleRowCount(5);
-		JScrollPane scroll = new JScrollPane(list1);
-		scroll.setBounds(x, 90, 200, y);
-		panelCentro.add(scroll);
 		//JCGE: Dejamos esto activado
 		textos.get(0).addFocusListener(fe);
 		textos.get(0).setEnabled(true);
 		textos.get(0).requestFocus();
+	}
+	public void listaUsuarios(JList list1, JPanel pane, int x, int y, int b, int h)
+	{
+		try {
+			ResultSet res = baseDatos.db.newQuery("SELECT array_to_string(array_agg(idusuario),',') AS usuarios FROM usuarios");
+			res.next();
+			String[] usuarios = res.getString("usuarios").split(",");
+			lista(usuarios,list1,pane,x,y,b,h);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		return;
+	}
+	public void lista(String[] cosas, JList list1, JPanel pane, int x, int y, int b, int h)
+	{
+		list1 = new JList(cosas);
+		list1.setVisibleRowCount(5);
+		JScrollPane scroll = new JScrollPane(list1);
+		scroll.setBounds(x,y,b,h);
+		pane.add(scroll);
 	}
 	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones
 	private ActionListener actionLins = new ActionListener()
