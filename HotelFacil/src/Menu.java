@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-public class Menu extends MainWindow implements ActionListener
+public class Menu extends MainWindow implements ActionListener, ListSelectionListener
 {
 	public JToolBar toolBar;
 	public ArrayList<JButton> botonera;
@@ -54,4 +56,9 @@ public class Menu extends MainWindow implements ActionListener
 		}
 		
 	};
+	@Override
+	public void valueChanged(ListSelectionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
