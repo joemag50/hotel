@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.text.DateFormat;
@@ -9,6 +8,10 @@ import javax.swing.event.ListSelectionEvent;
 
 public class Usuarios extends Menu implements ActionListener
 {
+	/**
+	 * JCGE: Modulo de Usuarios
+	 */
+	private static final long serialVersionUID = 3600455330726028640L;
 	//JCGE: Modulo de usuarios
 	public ArrayList<JLabel>  etiquetas;
 	static ArrayList<JTextField> textos;
@@ -19,22 +22,24 @@ public class Usuarios extends Menu implements ActionListener
 	public JFormattedTextField txtDate;
 	public ArrayList<JPasswordField> passwds;
 	public JPanel panelsito;
-	
+	public String[] tagz;
+	private Boolean esNuevo = false;
+	private Boolean cambiarPss = false;
+	private JRadioButton estatus;
+	private String[] estatusTagz;
 	Usuarios ()
 	{
 		//JCGE: Propiedades Generales
 		this.setTitle("Usuarios");
-		checkPermisos();
-		panelCentro.setLayout(null);
-		
 		//JCGE: Propiedades Particulares
-		String[] tagz = {"Usuario: ","Tipo Usuario: ",
+		tagz = new String[] {"Usuario: ","Tipo Usuario: ",
 						"Contraseña: ","Nombre: ",
 						"Paterno: ","Materno: ",
 						"F. Nacimiento: ","Télefono: ",
-						"CURP: ","RFC: ","NSS: "};
+						"CURP: ","RFC: ","NSS: ","Estatus: "};
 		String[] nombres = {"Nuevo","Guardar","Cancelar","Menu"};
 		rellenaToolBar(nombres, actionLins);
+		botonera.get(1).setEnabled(false);
 		etiquetas = new ArrayList<JLabel>();
 		textos    = new ArrayList<JTextField>();
 		passwds   = new ArrayList<JPasswordField>();
@@ -50,7 +55,9 @@ public class Usuarios extends Menu implements ActionListener
 			y = y + 25;
 			textos.add(new JTextField(200));
 		}
+		
 		x = b; y = 70; b = 200; h = 20;
+		
 		int i = 0;
 		for (JTextField tex: textos)
 		{
@@ -65,37 +72,42 @@ public class Usuarios extends Menu implements ActionListener
 				txtDate.setValue(new java.util.Date());
 				panelCentro.add(txtDate);
 			}
+			else if (i == 2)
+			{
+				//JCGE: Esta construyendo la contraseña, vamos a poner dos campos para la confirmacion
+				passwds.add(new JPasswordField());
+				passwds.get(0).setBounds(x,y,b,h);
+				passwds.get(0).addActionListener(actionLins);
+				passwds.get(0).setEnabled(false);
+				panelCentro.add(passwds.get(0));
+			
+				passwds.add(new JPasswordField());
+				passwds.get(1).setBounds(x+b+10,y,b,h);
+				passwds.get(1).addActionListener(actionLins);
+				passwds.get(1).setEnabled(false);
+				panelCentro.add(passwds.get(1));
+			}
+			else if (i == 11) //JCGE: Construyendo el combobox de estatus
+			{
+				estatus = new JRadioButton("Activo");
+				estatus.setBounds(x,y,b,h);
+				estatus.setEnabled(false);
+				estatus.setSelected(false);
+				panelCentro.add(estatus);
+			}
 			else
 			{
-				if (i == 2)
-				{
-					//JCGE: Esta construyendo la contraseña, vamos a poner dos campos para la confirmacion
-					passwds.add(new JPasswordField());
-					passwds.get(0).setBounds(x,y,b,h);
-					passwds.get(0).addActionListener(actionLins);
-					passwds.get(0).setEnabled(false);
-					panelCentro.add(passwds.get(0));
-					
-					passwds.add(new JPasswordField());
-					passwds.get(1).setBounds(x+b+10,y,b,h);
-					passwds.get(1).addActionListener(actionLins);
-					passwds.get(1).setEnabled(false);
-					panelCentro.add(passwds.get(1));
-				}
-				else
-				{
-					tex.setBounds(x,y,b,h);
-					tex.addActionListener(actionLins);
-					tex.setEnabled(false);
-					tex.putClientProperty("id", Integer.valueOf(i));
-					panelCentro.add(tex);
-				}
+				tex.setBounds(x,y,b,h);
+				tex.addActionListener(actionLins);
+				tex.setEnabled(false);
+				panelCentro.add(tex);
 			}
+			
 			y = y + 25;
 			i++;
 		}
 		//JCGE: Revisamos que botones le dio click
-		txtDate .addKeyListener(new KeyAdapter()
+		txtDate.addKeyListener(new KeyAdapter()
 		{
 			public void keyTyped(KeyEvent e)
 			{
@@ -109,7 +121,6 @@ public class Usuarios extends Menu implements ActionListener
 		});
 		
 		buscar = new JButton("Buscar");
-		
 		x += 210; buscar.setBounds(x,70,100,h);
 		buscar.setVisible(true);
 		buscar.setEnabled(true);
@@ -156,7 +167,7 @@ public class Usuarios extends Menu implements ActionListener
 	public void valueChanged(ListSelectionEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		System.out.println(lista.getSelectedIndex() + " " + lista.getSelectedValue());
+		//System.out.println(lista.getSelectedIndex() + " " + lista.getSelectedValue());
 		textos.get(0).setText(""+lista.getSelectedValue().toString().trim());
 		textos.get(0).requestFocus();
 	}
@@ -177,65 +188,126 @@ public class Usuarios extends Menu implements ActionListener
 					r.add(baseDatos.db.newQuery("SELECT * "
 												+" FROM usuarios "
 												+"WHERE idusuario = trim('"+textos.get(0).getText()+"')"));
-					r.get(0).next();
-					
-					textos.get(3).setText(r.get(0).getString("nombre"));
-					textos.get(4).setText(r.get(0).getString("paterno"));
-					textos.get(5).setText(r.get(0).getString("materno"));
-					textos.get(1).setText(r.get(0).getString("tipo_usuario"));
-					txtDate.setValue(r.get(0).getDate("fechanacimiento"));
-					textos.get(7).setText(r.get(0).getString("telefono"));
-					textos.get(8).setText(r.get(0).getString("curp"));
-					textos.get(9).setText(r.get(0).getString("rfc"));
-					textos.get(10).setText(r.get(0).getString("nss"));
-					for (JTextField tex: textos)
+					if (r.get(0).next())
 					{
-						tex.setEnabled(true);
+						textos.get(3).setText(r.get(0).getString("nombre"));
+						textos.get(4).setText(r.get(0).getString("paterno"));
+						textos.get(5).setText(r.get(0).getString("materno"));
+						textos.get(1).setText(r.get(0).getString("tipo_usuario"));
+						txtDate.setValue(r.get(0).getDate("fechanacimiento"));
+						textos.get(7).setText(r.get(0).getString("telefono"));
+						textos.get(8).setText(r.get(0).getString("curp"));
+						textos.get(9).setText(r.get(0).getString("rfc"));
+						textos.get(10).setText(r.get(0).getString("nss"));
+						estatus.setSelected(r.get(0).getBoolean("activo"));
+						for (JTextField tex: textos)
+						{
+							tex.setEnabled(true);
+						}
+						for (JPasswordField p: passwds)
+						{
+							p.setEnabled(true);
+						}
+						txtDate.setEnabled(true);
+						esNuevo = false;
+						botonera.get(1).setEnabled(true);
+						lista.setEnabled(false);
+						buscar.setEnabled(false);
+						estatus.setEnabled(true);
 					}
-					for (JPasswordField p: passwds)
+					else
 					{
-						p.setEnabled(true);
+						JOptionPane.showMessageDialog(null,"El usuario "+textos.get(0).getText()+" no existe");
+						int i = 0;
+						for (JTextField tex: textos)
+						{
+							if (i != 0)
+								tex.setText("");
+							
+							tex.setEnabled(false);
+							i++;
+						}
+						for (JPasswordField p: passwds)
+						{
+							p.setEnabled(false);
+						}
+						textos.get(0).setEnabled(true);
+						textos.get(0).requestFocus();
+						buscar.setEnabled(true);
+						lista.setEnabled(true);
+						estatus.setEnabled(false);
+						estatus.setSelected(false);
 					}
-					txtDate.setEnabled(true);
 				}
 				catch (SQLException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null,"El usuario "+textos.get(0).getText()+" no existe");
-					int i = 0;
-					for (JTextField tex: textos)
-					{
-						if (i != 0)
-							tex.setText("");
-						
-						tex.setEnabled(false);
-						i++;
-					}
-					for (JPasswordField p: passwds)
-					{
-						p.setEnabled(false);
-					}
-					textos.get(0).setEnabled(true);
-					textos.get(0).requestFocus();
-					
 				}
 			}
 			if (boton == "Guardar")
 			{
+				//JCGE: Le damos una leida a las contraseñas
+				String pss1 = new String(passwds.get(0).getPassword());
+				String rpss = new String(passwds.get(1).getPassword());
 				//JCGE: Necesitamos validar los campos que no esten vacios
-				if (textos.get(0).getText().trim().length() == 0)
+				for (int i = 0; i<= tagz.length-1; i++)
 				{
-					JOptionPane.showMessageDialog(null,"El usuario colocado no es válido.");
-					return;
+					//JCGE: Como el campo de contraseña y fecha de nacimiento son diferentes
+					// Tenemos que validarlos diferentes
+					if (i == 2 || i == 6 || i == 11)
+					{
+						if (i == 2) //JCGE: Es el campo de contraseña
+						{
+							if (esNuevo)
+							{
+								//JCGE: Nos aseguremos de que tengan info
+								if (pss1.length() < 6 || rpss.length() < 6)
+								{
+									JOptionPane.showMessageDialog(null,"Las contraseñas tienen que ser mayores a 6 caracteres. \nFavor de rellenarlos");
+									return;
+								}
+								if (!(pss1.equals(rpss)))
+								{
+									JOptionPane.showMessageDialog(null,"Las contraseñas deben de coincidir vaca . \nFavor de verificar de nuevo.");
+									return;
+								}
+							}
+							else //JCGE: No es nuevo
+							{
+								//JCGE: Tiene la intencion de cambiar la contraseña
+								if (pss1.length() > 0 || rpss.length() > 0)
+								{
+									//JCGE: Nos aseguremos de que tengan info
+									if (pss1.length() < 6 || rpss.length() < 6)
+									{
+										JOptionPane.showMessageDialog(null,"Las contraseñas tienen que ser mayores a 6 caracteres. \nFavor de rellenarlos");
+										return;
+									}
+									//System.out.println(pss1.toString() + " " + rpss.toString());
+									if (!(pss1.equals(rpss)))
+									{
+										JOptionPane.showMessageDialog(null,"Las contraseñas deben de coincidir perro. \nFavor de verificar de nuevo.");
+										return;
+									}
+									cambiarPss = true;
+								}
+							}
+						}
+						else
+						{
+							//JCGE: Es el campo de fecha
+						}
+					}
+					else
+					{
+						if (textos.get(i).getText().length() == 0)
+						{
+							JOptionPane.showMessageDialog(null,"El campo "+(tagz[i].split(":"))[0]+" es obligatorio. \nFavor de Rellenarlo");
+							return;
+						}
+					}
 				}
-				if (textos.get(3).getText().trim().length() == 0 || textos.get(4).getText().trim().length() == 0)
-				{
-					JOptionPane.showMessageDialog(null,"El Apellido Paterno y el Nombre son campos obligatorios. \nFavor de Rellenarlos");
-					return;
-				}
-				//System.out.println(textos.get(0).getText().trim());
-				
 				//JCGE: Es la señal que dice que quiere ver a un usuario existente
 				try
 				{
@@ -247,20 +319,39 @@ public class Usuarios extends Menu implements ActionListener
 					if (r.get(0).next())
 					{
 						//
-						
-						String query = String.format("UPDATE usuarios SET (pass,paterno,materno,nombre,"
-												   + "                           fechanacimiento,telefono,curp,"
-												   + "                           rfc,nss,tipo_usuario) ="
-												   + "                          ('%s','%s','%s','%s',"
-												   + "                           '%s'::DATE,'%s','%s',"
-												   + "                           '%s','%s','%s') WHERE idusuario = trim('%s')",
-												   baseDatos.db.utilMd5(textos.get(2).getText()),textos.get(4).getText(), textos.get(5).getText(), textos.get(3).getText(),
-												   txtDate.getValue(), textos.get(7).getText(), textos.get(8).getText(),
-												   textos.get(9).getText(), textos.get(10).getText(), textos.get(1).getText(),
-												   textos.get(0).getText());
+						String query;
+						//JCGE: En este si cambiamos la contraseña
+						if (cambiarPss)
+						{
+							query = String.format("UPDATE usuarios SET (pass,paterno,materno,nombre,"
+								    + "                     fechanacimiento,telefono,curp,"
+									+ "                     rfc,nss,tipo_usuario,activo) ="
+									+ "                    ('%s','%s','%s','%s',"
+									+ "                     '%s'::DATE,'%s','%s',"
+									+ "                     '%s','%s','%s', %s) "
+									+ "WHERE idusuario = trim('%s')",
+									baseDatos.db.utilMd5(pss1),textos.get(4).getText(),  textos.get(5).getText(), textos.get(3).getText(),
+									txtDate.getValue(),        textos.get(7).getText(),  textos.get(8).getText(),
+									textos.get(9).getText(),   textos.get(10).getText(), textos.get(1).getText(), estatus.isSelected(),
+									textos.get(0).getText());
+						}
+						else //JCGE: En este no cambiamos la contraseña
+						{
+							query = String.format("UPDATE usuarios SET (paterno,materno,nombre,"
+								    + "                     fechanacimiento,telefono,curp,"
+									+ "                     rfc,nss,tipo_usuario,activo) ="
+									+ "                    ('%s','%s','%s',"
+									+ "                     '%s'::DATE,'%s','%s',"
+									+ "                     '%s','%s','%s',%s) "
+									+ "WHERE idusuario = trim('%s')",
+									textos.get(4).getText(), textos.get(5).getText(),  textos.get(3).getText(),
+									txtDate.getValue(),      textos.get(7).getText(),  textos.get(8).getText(),
+									textos.get(9).getText(), textos.get(10).getText(), textos.get(1).getText(), estatus.isSelected(),
+									textos.get(0).getText());
+						}
 						baseDatos.db.newInsert(query);
 						
-						System.out.println(textos.get(0).getText()+" Este men fue actualizado");
+						JOptionPane.showMessageDialog(null, "El Usuario: "+textos.get(0).getText()+" fue actualizado.");
 					}
 					//Si no existe lo insertamos
 					else
@@ -276,13 +367,14 @@ public class Usuarios extends Menu implements ActionListener
 												   + "        '%s'::DATE,'%s','%s',"
 												   + "        '%s','%s',TRUE,'%s')",
 												   textos.get(0).getText(), baseDatos.db.utilMd5(textos.get(2).getText()),
-												   textos.get(4).getText(), textos.get(5).getText(), textos.get(3).getText(),
-												   txtDate.getValue(), textos.get(7).getText(), textos.get(8).getText(),
+												   textos.get(4).getText(), textos.get(5).getText(),  textos.get(3).getText(),
+												   txtDate.getValue(),      textos.get(7).getText(),  textos.get(8).getText(),
 												   textos.get(9).getText(), textos.get(10).getText(), textos.get(1).getText());
 						System.out.println(query);
 						baseDatos.db.newInsert(query);
 						
-						System.out.println(textos.get(0).getText()+" Este men fue insertado");
+						JOptionPane.showMessageDialog(null, "El Usuario: "+textos.get(0).getText()+" fue agregado.");
+						rellenaLista();
 					}
 					//JCGE: Sea insert o update hay que limpiar todo el cagadero
 					for (JTextField tex: textos)
@@ -293,13 +385,15 @@ public class Usuarios extends Menu implements ActionListener
 					for (JPasswordField p: passwds)
 					{
 						p.setEnabled(false);
+						p.setText("");
 					}
 					lista.setEnabled(true);
 					txtDate.setEnabled(false);
 					textos.get(0).setEnabled(true);
 					textos.get(0).requestFocus();
 					buscar.setEnabled(true);
-					rellenaLista();
+					estatus.setEnabled(false);
+					estatus.setSelected(false);
 				}
 				catch (SQLException e1)
 				{
@@ -307,6 +401,7 @@ public class Usuarios extends Menu implements ActionListener
 					e1.printStackTrace();
 				}
 				lista.setEnabled(true);
+				botonera.get(1).setEnabled(false);
 			}
 			if (boton == "Cancelar")
 			{
@@ -319,12 +414,16 @@ public class Usuarios extends Menu implements ActionListener
 				for (JPasswordField p: passwds)
 				{
 					p.setEnabled(false);
+					p.setText("");
 				}
 				lista.setEnabled(true);
 				txtDate.setEnabled(false);
 				textos.get(0).setEnabled(true);
 				textos.get(0).requestFocus();
 				buscar.setEnabled(true);
+				botonera.get(1).setEnabled(false);
+				estatus.setEnabled(false);
+				estatus.setSelected(false);
 			}
 			if (boton == "Menu")
 			{
@@ -350,6 +449,10 @@ public class Usuarios extends Menu implements ActionListener
 				lista.setEnabled(false);
 				textos.get(0).requestFocus();
 				buscar.setEnabled(false);
+				esNuevo = true;
+				botonera.get(1).setEnabled(true);
+				estatus.setEnabled(false);
+				estatus.setSelected(true);
 			}
 		}
 	};

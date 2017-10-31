@@ -21,12 +21,14 @@ public class Menu extends MainWindow implements ActionListener, ListSelectionLis
 		//JCGE: Propiedades Generales
 		this.setTitle("Principal");
 		checkPermisos();
-		toolBar = new JToolBar(null, JToolBar.VERTICAL);
+		panelCentro.setLayout(null);
+		toolBar = new JToolBar(null, JToolBar.HORIZONTAL);
 		toolBar.setVisible(true);
 		
 		//JCGE: Propiedades Especificas
 		botonera = new ArrayList<JButton>();
-		frame.add(toolBar, BorderLayout.WEST);
+		toolBar.setBounds(0,0,Principal.ventana.WIDTH.intValue(),40);
+		panelCentro.add(toolBar);
 		//JCGE: Propiedades Particulares
 		l_titulo.setText("Usuario: " + baseDatos.db.getUsuario());
 	}

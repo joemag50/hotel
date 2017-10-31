@@ -183,8 +183,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana.dispose();
 			Principal.ventana = new Login();
 			Principal.ventana.finGUI();
-			//Principal.ventana.setSize(Principal.WIDTH.intValue()-100, Principal.HEIGHT.intValue()-100);
-			System.out.println("Este men se quiere salir");
+			//System.out.println("Este men se quiere salir");
 		}
 		if (boton == "Usuarios")
 		{
@@ -194,7 +193,38 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana = new Usuarios();
 			Principal.ventana.finGUI();
 			Usuarios.textos.get(0).requestFocus();
-			//Principal.ventana.setSize(850, 600);
+		}
+		if (boton == "Nuevo Cuarto")
+		{
+			//JCGE: 
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new NuevoCuarto();
+			Principal.ventana.finGUI();
+		}
+		if (boton == "CheckOut")
+		{
+			//JCGE: 
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new Checkout();
+			Principal.ventana.finGUI();
+		}
+		if (boton == "Reportes del Gerente")
+		{
+			//JCGE: 
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new reportesGerente();
+			Principal.ventana.finGUI();
+		}
+		if (boton == "Mi Cuenta")
+		{
+			//JCGE: 
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new miCuenta();
+			Principal.ventana.finGUI();
 		}
 	}
 	@Override

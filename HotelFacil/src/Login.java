@@ -15,6 +15,11 @@ import javax.swing.event.MenuListener;
 
 public class Login extends MainWindow
 {
+	/**
+	 * JCGE: Modulo Login
+	 * Modulo para darle acceso a nuestro usuario y pueda acceder a sus funcionalidades
+	 */
+	private static final long serialVersionUID = -1183981314966144116L;
 	static JTextField user;
 	JPasswordField passt;
 	Integer intentos = 0;
