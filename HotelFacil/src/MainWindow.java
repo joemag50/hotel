@@ -73,7 +73,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		//JCGE: Preparamos las areas de trabajo de las ventanas
 		panelSur   = new JPanel();
 		panelCentro = new JPanel();
-		
+		panelCentro.setLayout(null);
 		//JCGE: Basicamente esto es para identificar las cajas...
 		//posiblemente el sistema en general lo ponemos amarillo claro
 		//para que no dañe la vista
@@ -104,24 +104,27 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		menuItems = new ArrayList<JMenuItem>();
 		menuItems.add(new JMenuItem("Usuarios"));
 		menuItems.add(new JMenuItem("Reportes del Gerente"));
+		menuItems.add(new JMenuItem("Habitaciones"));
 		menuItems.get(0).addActionListener(this);
 		menuItems.get(1).addActionListener(this);
+		menuItems.get(2).addActionListener(this);
 		menuz.get(0).add(menuItems.get(0));
 		menuz.get(0).add(menuItems.get(1));
+		menuz.get(0).add(menuItems.get(2));
 		
 		menuItems.add(new JMenuItem("Nuevo Cuarto"));
 		menuItems.add(new JMenuItem("CheckOut"));
-		menuItems.get(2).addActionListener(this);
 		menuItems.get(3).addActionListener(this);
-		menuz.get(1).add(menuItems.get(2));
+		menuItems.get(4).addActionListener(this);
 		menuz.get(1).add(menuItems.get(3));
+		menuz.get(1).add(menuItems.get(4));
 		
 		menuItems.add(new JMenuItem("Mi Cuenta"));
-		menuItems.get(4).addActionListener(this);
-		menuz.get(2).add(menuItems.get(4));
-		menuItems.add(new JMenuItem("Salir"));
 		menuItems.get(5).addActionListener(this);
 		menuz.get(2).add(menuItems.get(5));
+		menuItems.add(new JMenuItem("Salir"));
+		menuItems.get(6).addActionListener(this);
+		menuz.get(2).add(menuItems.get(6));
 		
 		//Les asignamos un borde para identificarlo
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -224,6 +227,14 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana.setVisible(false);
 			Principal.ventana.dispose();
 			Principal.ventana = new miCuenta();
+			Principal.ventana.finGUI();
+		}
+		if (boton == "Habitaciones")
+		{
+			//JCGE: 
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new Habitaciones();
 			Principal.ventana.finGUI();
 		}
 	}

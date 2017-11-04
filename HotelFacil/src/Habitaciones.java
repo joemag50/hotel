@@ -1,22 +1,23 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class NuevoCuarto extends Menu implements ActionListener
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class Habitaciones extends Menu implements ActionListener
 {
-	/** 
-	 * JCGE 30/10/2017 Nuevo Cuarto
-	 * aqui vamos agregar a un nuevo inquilino
+	/**
+	 * JCGE: Modulo para agregar habitaciones
 	 */
-	private static final long serialVersionUID = -137397340528622211L;
-	
-	NuevoCuarto()
+	private static final long serialVersionUID = 4995360916941152629L;
+	private ArrayList<JLabel> etiquetas;
+	private ArrayList<JTextField> textos;
+	Habitaciones()
 	{
-		this.setTitle("Nuevo Cuarto");
+		this.setTitle("Reportes del Gerente");
 		String[] nombres = {"Nuevo","Guardar","Cancelar","Menu"};
 		rellenaToolBar(nombres, actionLins);
-		
-		//JCGE: Propiedades especificas.
-		
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
 	private ActionListener actionLins = new ActionListener()

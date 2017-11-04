@@ -1,10 +1,16 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,6 +29,7 @@ public class Login extends MainWindow
 	static JTextField user;
 	JPasswordField passt;
 	Integer intentos = 0;
+	BufferedImage img = null;
 	//JCGE: Construimos desde el MainWindow
 	Login()
 	{
@@ -44,6 +51,22 @@ public class Login extends MainWindow
 		loginBox.add(l_passt);
 		loginBox.add(passt);
 		loginBox.add(boton);
+		//JCGE: Vamos a prepararnos para poner una imagen aca loca
+		int x = 450,y = 450,b = 500,h = 100;
+		try
+		{
+		    img = ImageIO.read(new File("media/logo_hf.png"));
+			System.out.println("Imagen bien");
+		}
+		catch (IOException e)
+		{
+			//JCGE
+			System.out.println(e.getMessage());
+		}
+		JLabel picLabel = new JLabel(new ImageIcon(img));
+		picLabel.setBounds(x - 200, y - 300, b * 2, h * 2);
+		panelCentro.add(picLabel);
+		loginBox.setBounds(x,y,b,h);
 		panelCentro.add(loginBox);
 	}
 	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones

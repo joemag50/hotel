@@ -13,16 +13,16 @@ public class Usuarios extends Menu implements ActionListener
 	 */
 	private static final long serialVersionUID = 3600455330726028640L;
 	//JCGE: Modulo de usuarios
-	public ArrayList<JLabel>  etiquetas;
+	private ArrayList<JLabel>  etiquetas;
 	static ArrayList<JTextField> textos;
-	public ArrayList<ResultSet> r;
-	public JButton buscar;
-	public JLabel usuarios;
+	private ArrayList<ResultSet> r;
+	private JButton buscar;
+	private JLabel usuarios;
 	static JList lista;
-	public JFormattedTextField txtDate;
-	public ArrayList<JPasswordField> passwds;
-	public JPanel panelsito;
-	public String[] tagz;
+	private JFormattedTextField txtDate;
+	private ArrayList<JPasswordField> passwds;
+	private JPanel panelsito;
+	private String[] tagz;
 	private Boolean esNuevo = false;
 	private Boolean cambiarPss = false;
 	private JRadioButton estatus;
@@ -63,6 +63,7 @@ public class Usuarios extends Menu implements ActionListener
 		{
 			if (i == 6)
 			{
+				//JCGE: Buscar date picker
 				//JCGE: Vamos a poner un campo especial de fecha
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				txtDate = new JFormattedTextField(df);
@@ -168,7 +169,10 @@ public class Usuarios extends Menu implements ActionListener
 	{
 		// TODO Auto-generated method stub
 		//System.out.println(lista.getSelectedIndex() + " " + lista.getSelectedValue());
-		textos.get(0).setText(""+lista.getSelectedValue().toString().trim());
+		if (lista.getSelectedValue() != null)
+		{
+			textos.get(0).setText(""+lista.getSelectedValue().toString().trim());	
+		}
 		textos.get(0).requestFocus();
 	}
 	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones
@@ -394,14 +398,14 @@ public class Usuarios extends Menu implements ActionListener
 					buscar.setEnabled(true);
 					estatus.setEnabled(false);
 					estatus.setSelected(false);
+					botonera.get(1).setEnabled(false);
+					botonera.get(0).setEnabled(true);
 				}
 				catch (SQLException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				lista.setEnabled(true);
-				botonera.get(1).setEnabled(false);
 			}
 			if (boton == "Cancelar")
 			{
@@ -422,6 +426,7 @@ public class Usuarios extends Menu implements ActionListener
 				textos.get(0).requestFocus();
 				buscar.setEnabled(true);
 				botonera.get(1).setEnabled(false);
+				botonera.get(0).setEnabled(true);
 				estatus.setEnabled(false);
 				estatus.setSelected(false);
 			}
@@ -451,6 +456,7 @@ public class Usuarios extends Menu implements ActionListener
 				buscar.setEnabled(false);
 				esNuevo = true;
 				botonera.get(1).setEnabled(true);
+				botonera.get(0).setEnabled(false);
 				estatus.setEnabled(false);
 				estatus.setSelected(true);
 			}
