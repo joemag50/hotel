@@ -60,7 +60,7 @@ BEGIN
   r_mesj  := '';
   -- JCGE: Le actualizamos si pasa de los intentos
   -- Contamos desde 0
-  IF (p_intentos >= 2) THEN
+  IF (p_intentos > 2) THEN
     UPDATE usuarios SET activo = FALSE WHERE idusuario = p_user;
   END IF;
   -- JCGE: Buscamos si existe el usuario y contraseña

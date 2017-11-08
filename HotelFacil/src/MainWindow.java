@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -11,6 +13,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,13 +50,13 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	
 	public Container frame;
 	public JPanel panelNorte, panelEste, panelOeste, panelSur, panelCentro;
-	public JLabel l_titulo;
-	public JLabel elTiempo;
+	public JLabel l_titulo, elTiempo;
 	public JMenuBar menuBar;
 	
 	public ArrayList<JMenu> menuz;
 	public ArrayList<JMenuItem> menuItems;
 	public String[] nombres_menu = {"Administración","Operación","Mi Cuenta"};
+	public Font font = new Font("Ubuntu Mono", Font.PLAIN, 18);
 	//JCGE: Constructor aca mamalon
 	MainWindow ()
 	{
@@ -62,7 +65,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		frame.setLayout(new BorderLayout());
 		//JCGE: Preparamos la ventana
 		this.setTitle("Main Window");
-		this.setSize(this.WIDTH.intValue()-200, this.HEIGHT.intValue()-200);
+		this.setSize(this.WIDTH.intValue()-400, this.HEIGHT.intValue()-200);
 		//this.setSize(800, 599);
 		this.setResizable(false);
 		//this.setExtendedState(MAXIMIZED_BOTH);
@@ -77,8 +80,8 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		//JCGE: Basicamente esto es para identificar las cajas...
 		//posiblemente el sistema en general lo ponemos amarillo claro
 		//para que no dañe la vista
-		panelCentro.setBackground(Color.getHSBColor(210, 72, 100));
-		
+		//panelCentro.setBackground(Color.getHSBColor(210, 72, 100));
+		panelCentro.setBackground(Color.LIGHT_GRAY);
 		//JCGE: Estas instancias las usamos para ver la fecha
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
 		Calendar currentCalendar = Calendar.getInstance();
@@ -145,7 +148,8 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		//Etiquetas con la informacion
 		elTiempo = new JLabel("Fecha: " + dateFormat.format(currentTime));
 		l_titulo = new JLabel("Bienvenido HOTEL - FACIL");
-		
+		elTiempo.setFont(font);
+		l_titulo.setFont(font);
 		//Agregamos las etiquetas a los paneles con borde
 		statusRightPanel.add(l_titulo);
 		statusPanel.add(elTiempo);
@@ -160,7 +164,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		frame.add(menuBar, BorderLayout.NORTH);
 		frame.add(panelSur,   BorderLayout.SOUTH);
 		frame.add(panelCentro, BorderLayout.CENTER);
-		this.setSize(this.WIDTH.intValue()-200, this.HEIGHT.intValue()-201);
+		this.setSize(this.WIDTH.intValue()-400, this.HEIGHT.intValue()-201);
 		this.setLocationRelativeTo(null);
 	}
 	public void checkPermisos()
@@ -173,6 +177,51 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			}
 		}
 	}
+	protected KeyAdapter solonum = new KeyAdapter()
+	{
+		public void keyTyped(KeyEvent e)
+		{
+			char c = e.getKeyChar();
+			if (!((c >= '0') && (c <= '9') || (c == '.') || (c == KeyEvent.VK_TAB) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) ))        
+			{
+				JOptionPane.showMessageDialog(null, "Favor de ingresar solo números en este campo.");
+				e.consume();
+			}
+		}
+	};
+    protected Boolean isInteger(String s)
+    {
+        try
+        {
+        	Integer.parseInt(s);
+        }
+        catch(NumberFormatException e)
+        {
+        	return false;
+        }
+        catch(NullPointerException e)
+        {
+        	return false;
+        }
+        return true;  //Regresamos verdadero en caso de que sea numero realmente
+    }
+    //Esta funcion es para ver si es double o no
+    protected Boolean isDouble(String s)
+    {
+        try
+        {
+        	Double.parseDouble(s);
+        }
+        catch(NumberFormatException e)
+        {
+        	return false;
+        }
+        catch(NullPointerException e)
+        {
+        	return false;
+        }
+        return true;  //Regresamos verdadero en caso de que sea numero realmente
+    }
 	//Este es el metodo que se encarga de tomar las acciones en los botones
 	public void actionPerformed(ActionEvent arg0)
 	{
@@ -236,6 +285,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana.dispose();
 			Principal.ventana = new Habitaciones();
 			Principal.ventana.finGUI();
+			Habitaciones.idhabitacion.requestFocus();
 		}
 	}
 	@Override

@@ -52,7 +52,7 @@ public class Usuarios extends Menu implements ActionListener
 		{
 			tag.setBounds(x,y,b,h);
 			panelCentro.add(tag);
-			y = y + 25;
+			y += 25;
 			textos.add(new JTextField(200));
 		}
 		
@@ -104,7 +104,7 @@ public class Usuarios extends Menu implements ActionListener
 				panelCentro.add(tex);
 			}
 			
-			y = y + 25;
+			y += 25;
 			i++;
 		}
 		//JCGE: Revisamos que botones le dio click

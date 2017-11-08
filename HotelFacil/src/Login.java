@@ -38,12 +38,15 @@ public class Login extends MainWindow
 		
 		//JCGE: Propiedades Particulares
 		user = new JTextField(50);
+		user.setFont(super.font);
 		user.requestFocusInWindow();
 		passt = new JPasswordField(50);
 		JLabel l_user = new JLabel("Usuario: ");
 		JLabel l_passt = new JLabel("Contraseña: ");
 		JPanel loginBox = new JPanel();
 		JButton boton = new JButton("Entrar");
+		l_user.setFont(super.font);
+		l_passt.setFont(super.font);
 		boton.addActionListener(this);
 		loginBox.setLayout(new BoxLayout(loginBox, BoxLayout.Y_AXIS));
 		loginBox.add(l_user);
@@ -52,7 +55,7 @@ public class Login extends MainWindow
 		loginBox.add(passt);
 		loginBox.add(boton);
 		//JCGE: Vamos a prepararnos para poner una imagen aca loca
-		int x = 450,y = 450,b = 500,h = 100;
+		int x = 320,y = 450,b = 500,h = 100;
 		try
 		{
 		    img = ImageIO.read(new File("media/logo_hf.png"));
@@ -66,7 +69,7 @@ public class Login extends MainWindow
 		JLabel picLabel = new JLabel(new ImageIcon(img));
 		picLabel.setBounds(x - 200, y - 300, b * 2, h * 2);
 		panelCentro.add(picLabel);
-		loginBox.setBounds(x,y,b,h);
+		loginBox.setBounds(x,y,b,h+20);
 		panelCentro.add(loginBox);
 	}
 	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones
