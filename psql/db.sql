@@ -81,7 +81,7 @@ CREATE TABLE pagos (idpago      SERIAL NOT NULL PRIMARY KEY,
 
 -- -------------------------------------------------------------
 -- JCGE: Esta tabla es para poner las descripciones de las habitaciones
-CREATE TABLE habitaciones (idhabitacion  INTEGER PRIMARY KEY,
+CREATE TABLE habitaciones (idhabitacion  SERIAL PRIMARY KEY,
                            edificio      TEXT,
                            numero_fisico TEXT,
                            tabulacion    NUMERIC, --Cuanto va a multiplicarse la habitacion

@@ -34,6 +34,7 @@ public class Habitaciones extends Menu implements ActionListener
 	private JButton buscar;
 	static HFIntegerField idhabitacion;
 	private HFDoubleField tabulacion;
+	private String[] etiquetas;
 	Habitaciones()
 	{
 		this.setTitle("Habitaciones");
@@ -41,7 +42,7 @@ public class Habitaciones extends Menu implements ActionListener
 		rellenaToolBar(nombres, actionLins);
 		botonera.get(1).setEnabled(false); //Guardar
 		//JCGE: Propiedades especificas
-		String[] etiquetas = {"ID habitacion: ","Edificio: ", "Número: ", "Tabulación: ", "Descripción: "};
+		etiquetas = new String[] {"ID habitacion: ","Edificio: ", "Número: ", "Tabulación: ", "Descripción: "};
 		labels = new ArrayList<JLabel>();
 		textos = new ArrayList<HFTextField>();
 		int x = 10, y = 70, b = 200, h = 20;
@@ -107,12 +108,23 @@ public class Habitaciones extends Menu implements ActionListener
 		//listaUsuarios(lista, panelCentro, x, 90, 200, y-90);
 		try
 		{
+			String[] usuarios = new String[] {" "};
 			ResultSet res = baseDatos.db.newQuery("SELECT array_to_string(array_agg(idhabitacion||': '||'E. '||edificio||' N. '||numero_fisico),',') AS habitacion"
 												+ "  FROM (SELECT *"
 												+ "          FROM habitaciones"
 												+ "         ORDER BY idhabitacion) AS foo ");
-			res.next();
-			String[] usuarios = (" ,"+res.getString("habitacion")).split(",");
+			if (res.next())
+			{
+				System.out.println(res.getString("habitacion"));
+				if (res.getString("habitacion") != null)
+				{
+					usuarios = (" ,"+res.getString("habitacion")).split(",");
+				}
+				else
+				{
+					usuarios = new String[] {" "};
+				}
+			}
 			lista = new JList(usuarios);
 			lista.setVisibleRowCount(5);
 			lista.addListSelectionListener(this);
@@ -162,14 +174,48 @@ public class Habitaciones extends Menu implements ActionListener
 				botonera.get(0).setEnabled(false); //Nuevo
 				botonera.get(1).setEnabled(true); //Guardar
 				botonera.get(2).setEnabled(true); //Cancelar
+				buscar.setEnabled(false);
 				limpiarEntradas(true);
 			}
 			if (boton == "Guardar")
 			{
-				if (!(isInteger(idhabitacion.getText())))
+				//JCGE: Revisamos los objetos
+				int i = 0;
+				for (HFTextField txt: textos)
 				{
-					JOptionPane.showMessageDialog(null, "El identificador de la habitación tiene que ser un número.");
-					return;
+					if (i == 0)
+					{
+						if (!(isInteger(idhabitacion.getText())))
+						{
+							JOptionPane.showMessageDialog(null, "El identificador de la habitación tiene que ser un número.");
+							return;
+						}
+					}
+					else if (i == 3)
+					{
+						if (!(isDouble(tabulacion.getText())))
+						{
+							JOptionPane.showMessageDialog(null, "La tabulación de la habitación tiene que ser un número.");
+							return;
+						}
+					}
+					else if (i == 4)
+					{
+						if (desc.getText().trim().length() == 0)
+						{
+							JOptionPane.showMessageDialog(null, "Favor de escribir una descripción para la habitación.");
+							return;
+						}
+					}
+					else
+					{
+						if (txt.getText().trim().length() == 0)
+						{
+							JOptionPane.showMessageDialog(null, String.format("Favor de rellenar el campo de %s.",etiquetas[i]));
+							return;
+						}
+					}
+					i++;
 				}
 				//JCGE: Es la señal que dice que quiere ver a un usuario existente
 				try
@@ -201,12 +247,13 @@ public class Habitaciones extends Menu implements ActionListener
 						String query = String.format("INSERT INTO habitaciones (idhabitacion,edificio,numero_fisico,tabulacion,descripcion) "
 												   + "VALUES (DEFAULT,'%s','%s',%s,'%s')",
 												   textos.get(1).getText(), textos.get(2).getText(),
-												   tabulacion, desc.getText());
+												   tabulacion.getText(), desc.getText());
 						System.out.println(query);
 						baseDatos.db.newInsert(query);
 						
 						JOptionPane.showMessageDialog(null, "La habitación: "+idhabitacion.getText()+" fue agregada.");
 					}
+					buscar.setEnabled(true);
 				}
 				catch (SQLException e1)
 				{
@@ -228,10 +275,6 @@ public class Habitaciones extends Menu implements ActionListener
 			}
 			if (boton == "Buscar")
 			{
-				botonera.get(0).setEnabled(false); //Nuevo
-				botonera.get(1).setEnabled(true); //Guardar
-				botonera.get(2).setEnabled(true); //Cancelar
-				limpiarEntradas(true);
 				//JCGE: Es la señal que dice que quiere ver a un usuario existente
 				try
 				{
@@ -241,6 +284,10 @@ public class Habitaciones extends Menu implements ActionListener
 												+"WHERE idhabitacion = "+idhabitacion.getText()));
 					if (r.get(0).next())
 					{
+						botonera.get(0).setEnabled(false); //Nuevo
+						botonera.get(1).setEnabled(true); //Guardar
+						botonera.get(2).setEnabled(true); //Cancelar
+						limpiarEntradas(true);
 						int i = 1;
 						for (HFTextField txt: textos)
 						{
