@@ -38,15 +38,12 @@ public class Login extends MainWindow
 		
 		//JCGE: Propiedades Particulares
 		user = new JTextField(50);
-		user.setFont(super.font);
 		user.requestFocusInWindow();
 		passt = new JPasswordField(50);
-		JLabel l_user = new JLabel("Usuario: ");
-		JLabel l_passt = new JLabel("Contraseña: ");
+		HFLabel l_user = new HFLabel("Usuario: ");
+		HFLabel l_passt = new HFLabel("Contraseña: ");
 		JPanel loginBox = new JPanel();
 		JButton boton = new JButton("Entrar");
-		l_user.setFont(super.font);
-		l_passt.setFont(super.font);
 		boton.addActionListener(this);
 		loginBox.setLayout(new BoxLayout(loginBox, BoxLayout.Y_AXIS));
 		loginBox.add(l_user);

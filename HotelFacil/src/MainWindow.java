@@ -50,13 +50,12 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	
 	public Container frame;
 	public JPanel panelNorte, panelEste, panelOeste, panelSur, panelCentro;
-	public JLabel l_titulo, elTiempo;
+	public HFLabel l_titulo, elTiempo;
 	public JMenuBar menuBar;
 	
 	public ArrayList<JMenu> menuz;
 	public ArrayList<JMenuItem> menuItems;
 	public String[] nombres_menu = {"Administración","Operación","Mi Cuenta"};
-	public Font font = new Font("Ubuntu Mono", Font.PLAIN, 18);
 	//JCGE: Constructor aca mamalon
 	MainWindow ()
 	{
@@ -117,17 +116,20 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		
 		menuItems.add(new JMenuItem("Nuevo Cuarto"));
 		menuItems.add(new JMenuItem("CheckOut"));
+		menuItems.add(new JMenuItem("Alta de Huespedes"));
 		menuItems.get(3).addActionListener(this);
 		menuItems.get(4).addActionListener(this);
+		menuItems.get(5).addActionListener(this);
 		menuz.get(1).add(menuItems.get(3));
 		menuz.get(1).add(menuItems.get(4));
+		menuz.get(1).add(menuItems.get(5));
 		
 		menuItems.add(new JMenuItem("Mi Cuenta"));
-		menuItems.get(5).addActionListener(this);
-		menuz.get(2).add(menuItems.get(5));
-		menuItems.add(new JMenuItem("Salir"));
 		menuItems.get(6).addActionListener(this);
 		menuz.get(2).add(menuItems.get(6));
+		menuItems.add(new JMenuItem("Salir"));
+		menuItems.get(7).addActionListener(this);
+		menuz.get(2).add(menuItems.get(7));
 		
 		//Les asignamos un borde para identificarlo
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -146,10 +148,8 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		statusRightPanel.setLayout(new BoxLayout(statusRightPanel, BoxLayout.X_AXIS));
 		
 		//Etiquetas con la informacion
-		elTiempo = new JLabel("Fecha: " + dateFormat.format(currentTime));
-		l_titulo = new JLabel("Bienvenido HOTEL - FACIL");
-		elTiempo.setFont(font);
-		l_titulo.setFont(font);
+		elTiempo = new HFLabel("Fecha: " + dateFormat.format(currentTime));
+		l_titulo = new HFLabel("Bienvenido HOTEL - FACIL");
 		//Agregamos las etiquetas a los paneles con borde
 		statusRightPanel.add(l_titulo);
 		statusPanel.add(elTiempo);
@@ -286,6 +286,14 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana = new Habitaciones();
 			Principal.ventana.finGUI();
 			Habitaciones.idhabitacion.requestFocus();
+		}
+		if (boton == "Alta de Huespedes")
+		{
+			//JCGE: 
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new altaHuespedes();
+			Principal.ventana.finGUI();
 		}
 	}
 	@Override

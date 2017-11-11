@@ -10,6 +10,9 @@ import javax.swing.JTextField;
 
 public class HFIntegerField extends JTextField implements KeyListener, FocusListener
 {
+	public buscador frame;
+	public String busqueda;
+	public String query;
 	HFIntegerField()
 	{
 		this.addKeyListener(this);
@@ -20,15 +23,23 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 	public void keyTyped(KeyEvent e)
 	{
 		char c = e.getKeyChar();
-		if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_TAB) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE) ))        
+		if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_TAB) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))        
 		{
 			e.consume();
 		}
 	}
 	@Override
-	public void keyPressed(KeyEvent arg0)
+	public void keyPressed(KeyEvent e)
 	{
 		//
+		if (busqueda == null)
+		{
+			return;
+		}
+		if (e.getKeyCode() == 114) //F3
+		{
+			frame = new buscador(busqueda, query, this);
+		}
 	}
 	@Override
 	public void keyReleased(KeyEvent arg0)

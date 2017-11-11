@@ -72,3 +72,33 @@ BEGIN
 END;$$
 LANGUAGE plpgsql;
 
+
+
+--------------------------
+-- JCGE: Funcion para saber si existe una habitacion en el mismo edificio
+--------------------------
+CREATE OR REPLACE FUNCTION hotel_existe_habitacion (
+  p_idhabitacion  INTEGER,
+  p_edificio      TEXT,
+  p_numero_fisico TEXT,
+  OUT r_found     BOOLEAN,
+  OUT r_mesj      TEXT)
+  RETURNS RECORD AS $$
+DECLARE
+  --Variables
+BEGIN
+  r_found := FALSE;
+  p_edificio      := trim(p_edificio) ; 
+  p_numero_fisico := trim(p_numero_fisico) ; 
+  PERFORM *
+    FROM habitaciones
+   WHERE (edificio,numero_fisico) = (p_edificio,p_numero_fisico) AND
+         idhabitacion <> p_idhabitacion;
+  IF FOUND THEN
+    r_found         := TRUE;
+    r_mesj          := 'Existe una habitación con los nombres proporcionados, Favor de intentar con otros nombres.';
+  END IF;
+  RETURN;
+END;$$
+LANGUAGE plpgsql;
+

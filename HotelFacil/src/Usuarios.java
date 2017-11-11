@@ -13,20 +13,16 @@ public class Usuarios extends Menu implements ActionListener
 	 */
 	private static final long serialVersionUID = 3600455330726028640L;
 	//JCGE: Modulo de usuarios
-	private ArrayList<JLabel>  etiquetas;
-	static ArrayList<JTextField> textos;
+	private ArrayList<HFLabel>  etiquetas;
+	static ArrayList<HFTextField> textos;
 	private ArrayList<ResultSet> r;
 	private JButton buscar;
-	private JLabel usuarios;
-	static JList lista;
 	private JFormattedTextField txtDate;
 	private ArrayList<JPasswordField> passwds;
-	private JPanel panelsito;
 	private String[] tagz;
 	private Boolean esNuevo = false;
 	private Boolean cambiarPss = false;
 	private JRadioButton estatus;
-	private String[] estatusTagz;
 	Usuarios ()
 	{
 		//JCGE: Propiedades Generales
@@ -40,26 +36,26 @@ public class Usuarios extends Menu implements ActionListener
 		String[] nombres = {"Nuevo","Guardar","Cancelar","Menu"};
 		rellenaToolBar(nombres, actionLins);
 		botonera.get(1).setEnabled(false);
-		etiquetas = new ArrayList<JLabel>();
-		textos    = new ArrayList<JTextField>();
+		etiquetas = new ArrayList<HFLabel>();
+		textos    = new ArrayList<HFTextField>();
 		passwds   = new ArrayList<JPasswordField>();
 		for (int i = 0; i <= tagz.length-1; i++)
 		{
-			etiquetas.add(new JLabel(tagz[i]));
+			etiquetas.add(new HFLabel(tagz[i]));
 		}
 		int x = 10, y = 70, b = 120, h = 20;
-		for(JLabel tag: etiquetas)
+		for(HFLabel tag: etiquetas)
 		{
 			tag.setBounds(x,y,b,h);
 			panelCentro.add(tag);
 			y += 25;
-			textos.add(new JTextField(200));
+			textos.add(new HFTextField(200));
 		}
 		
 		x = b; y = 70; b = 200; h = 20;
 		
 		int i = 0;
-		for (JTextField tex: textos)
+		for (HFTextField tex: textos)
 		{
 			if (i == 6)
 			{
@@ -98,6 +94,14 @@ public class Usuarios extends Menu implements ActionListener
 			}
 			else
 			{
+				if (i == 0)
+				{
+					tex.busqueda = "Usuarios";
+					tex.query = "SELECT array_to_string(array_agg(idusuario),',') AS usuarios"
+							+ "  FROM (SELECT *"
+							+ "          FROM usuarios"
+							+ "         ORDER BY idusuario) AS foo ";
+				}
 				tex.setBounds(x,y,b,h);
 				tex.addActionListener(actionLins);
 				tex.setEnabled(false);
@@ -128,51 +132,9 @@ public class Usuarios extends Menu implements ActionListener
 		buscar.addActionListener(actionLins);
 		panelCentro.add(buscar);
 		
-		//JCGE: Aqui vamos a mostrar una pequeña lista de usuarios
-		panelsito = new JPanel();
-		usuarios = new JLabel("Usuarios actuales: ");
-		x += 210; usuarios.setBounds(0,0,200,20);
-		panelsito.add(usuarios);
-		panelsito.setBounds(x, 90, 200, y-90);
-		
-		//listaUsuarios(lista, panelCentro, x, 90, 200, y-90);
-		try {
-			ResultSet res = baseDatos.db.newQuery("SELECT array_to_string(array_agg(idusuario),',') AS usuarios"
-												+ "  FROM (SELECT *"
-												+ "          FROM usuarios"
-												+ "         ORDER BY idusuario) AS foo ");
-			res.next();
-			String[] usuarios = (" ,"+res.getString("usuarios")).split(",");
-			lista = new JList(usuarios);
-			lista.setVisibleRowCount(5);
-			lista.addListSelectionListener(this);
-			lista.setSelectedIndex(0);
-			//lista.addFocusListener(fe);
-			lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			JScrollPane scroll = new JScrollPane(lista);
-			scroll.setBounds(0, 30, 200, y-90);
-			panelsito.setLayout(null);
-			panelsito.add(scroll);
-			panelCentro.add(panelsito);
-		}
-		catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		//JCGE: Dejamos esto activado
 		textos.get(0).addFocusListener(fe);
 		textos.get(0).setEnabled(true);
-		textos.get(0).requestFocus();
-	}
-	public void valueChanged(ListSelectionEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		//System.out.println(lista.getSelectedIndex() + " " + lista.getSelectedValue());
-		if (lista.getSelectedValue() != null)
-		{
-			textos.get(0).setText(""+lista.getSelectedValue().toString().trim());	
-		}
 		textos.get(0).requestFocus();
 	}
 	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones
@@ -204,7 +166,7 @@ public class Usuarios extends Menu implements ActionListener
 						textos.get(9).setText(r.get(0).getString("rfc"));
 						textos.get(10).setText(r.get(0).getString("nss"));
 						estatus.setSelected(r.get(0).getBoolean("activo"));
-						for (JTextField tex: textos)
+						for (HFTextField tex: textos)
 						{
 							tex.setEnabled(true);
 						}
@@ -215,7 +177,7 @@ public class Usuarios extends Menu implements ActionListener
 						txtDate.setEnabled(true);
 						esNuevo = false;
 						botonera.get(1).setEnabled(true);
-						lista.setEnabled(false);
+						botonera.get(0).setEnabled(false);
 						buscar.setEnabled(false);
 						estatus.setEnabled(true);
 					}
@@ -223,7 +185,7 @@ public class Usuarios extends Menu implements ActionListener
 					{
 						JOptionPane.showMessageDialog(null,"El usuario "+textos.get(0).getText()+" no existe");
 						int i = 0;
-						for (JTextField tex: textos)
+						for (HFTextField tex: textos)
 						{
 							if (i != 0)
 								tex.setText("");
@@ -238,7 +200,6 @@ public class Usuarios extends Menu implements ActionListener
 						textos.get(0).setEnabled(true);
 						textos.get(0).requestFocus();
 						buscar.setEnabled(true);
-						lista.setEnabled(true);
 						estatus.setEnabled(false);
 						estatus.setSelected(false);
 					}
@@ -378,10 +339,9 @@ public class Usuarios extends Menu implements ActionListener
 						baseDatos.db.newInsert(query);
 						
 						JOptionPane.showMessageDialog(null, "El Usuario: "+textos.get(0).getText()+" fue agregado.");
-						rellenaLista();
 					}
 					//JCGE: Sea insert o update hay que limpiar todo el cagadero
-					for (JTextField tex: textos)
+					for (HFTextField tex: textos)
 					{
 						tex.setText("");
 						tex.setEnabled(false);
@@ -391,7 +351,6 @@ public class Usuarios extends Menu implements ActionListener
 						p.setEnabled(false);
 						p.setText("");
 					}
-					lista.setEnabled(true);
 					txtDate.setEnabled(false);
 					textos.get(0).setEnabled(true);
 					textos.get(0).requestFocus();
@@ -410,7 +369,7 @@ public class Usuarios extends Menu implements ActionListener
 			if (boton == "Cancelar")
 			{
 				//
-				for (JTextField tex: textos)
+				for (HFTextField tex: textos)
 				{
 					tex.setText("");
 					tex.setEnabled(false);
@@ -420,7 +379,6 @@ public class Usuarios extends Menu implements ActionListener
 					p.setEnabled(false);
 					p.setText("");
 				}
-				lista.setEnabled(true);
 				txtDate.setEnabled(false);
 				textos.get(0).setEnabled(true);
 				textos.get(0).requestFocus();
@@ -440,7 +398,7 @@ public class Usuarios extends Menu implements ActionListener
 			}
 			if (boton == "Nuevo")
 			{
-				for (JTextField tex: textos)
+				for (HFTextField tex: textos)
 				{
 					tex.setEnabled(true);
 					tex.setText("");
@@ -450,8 +408,6 @@ public class Usuarios extends Menu implements ActionListener
 					p.setEnabled(true);
 				}
 				txtDate.setEnabled(true);
-				lista.setSelectedIndex(0);
-				lista.setEnabled(false);
 				textos.get(0).requestFocus();
 				buscar.setEnabled(false);
 				esNuevo = true;
@@ -478,22 +434,4 @@ public class Usuarios extends Menu implements ActionListener
 			System.out.println(textos.get(0).getText());
 		}
 	};
-	public void rellenaLista()
-	{
-		try {
-			ResultSet res = baseDatos.db.newQuery("SELECT array_to_string(array_agg(idusuario),',') AS usuarios"
-												+ "  FROM (SELECT *"
-												+ "          FROM usuarios"
-												+ "         ORDER BY idusuario) AS foo ");
-			if (res.next())
-			{
-				String[] usuarios;
-				usuarios = (" ,"+res.getString("usuarios")).split(",");
-				lista.setListData(usuarios);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }

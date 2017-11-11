@@ -24,12 +24,9 @@ public class Habitaciones extends Menu implements ActionListener
 	 * JCGE: Modulo para agregar habitaciones
 	 */
 	private static final long serialVersionUID = 4995360916941152629L;
-	private ArrayList<JLabel> labels;
+	private ArrayList<HFLabel> labels;
 	static  ArrayList<HFTextField> textos;
 	private ArrayList<ResultSet> r;
-	private JPanel panelsito;
-	private JLabel habitaciones;
-	private JList lista;
 	private JTextArea desc;
 	private JButton buscar;
 	static HFIntegerField idhabitacion;
@@ -43,14 +40,14 @@ public class Habitaciones extends Menu implements ActionListener
 		botonera.get(1).setEnabled(false); //Guardar
 		//JCGE: Propiedades especificas
 		etiquetas = new String[] {"ID habitacion: ","Edificio: ", "Número: ", "Tabulación: ", "Descripción: "};
-		labels = new ArrayList<JLabel>();
+		labels = new ArrayList<HFLabel>();
 		textos = new ArrayList<HFTextField>();
 		int x = 10, y = 70, b = 200, h = 20;
 		for (int i = 0; i<= etiquetas.length-1; i++)
 		{
-			labels.add(new JLabel(etiquetas[i]));
+			labels.add(new HFLabel(etiquetas[i]));
 		}
-		for (JLabel tag: labels)
+		for (HFLabel tag: labels)
 		{
 			tag.setBounds(x, y, b, h);
 			panelCentro.add(tag);
@@ -67,6 +64,11 @@ public class Habitaciones extends Menu implements ActionListener
 				idhabitacion = new HFIntegerField();
 				idhabitacion.setBounds(x,y,b,h);
 				idhabitacion.setEnabled(true);
+				idhabitacion.busqueda = "Habitaciones";
+				idhabitacion.query = "SELECT array_to_string(array_agg(idhabitacion||': '||'Edificio '||edificio||' Número. '||numero_fisico),',') AS habitacion"
+								+ "     FROM (SELECT *"
+								+ "             FROM habitaciones"
+								+ "            ORDER BY idhabitacion) AS foo ";
 				panelCentro.add(idhabitacion);
 			}
 			else if (i == 3)
@@ -97,61 +99,6 @@ public class Habitaciones extends Menu implements ActionListener
 		buscar.addActionListener(actionLins);
 		x += 210; buscar.setBounds(x,70,100,h);
 		panelCentro.add(buscar);
-		//JCGE: Aqui vamos a mostrar una pequeña lista de usuarios
-		panelsito = new JPanel();
-		habitaciones = new JLabel("Habitaciones actuales: ");
-		x += 110; y = 70;
-		habitaciones.setBounds(0,0,b,20);
-		panelsito.add(habitaciones);
-		panelsito.setBounds(x, y, b, 300);
-		
-		//listaUsuarios(lista, panelCentro, x, 90, 200, y-90);
-		try
-		{
-			String[] usuarios = new String[] {" "};
-			ResultSet res = baseDatos.db.newQuery("SELECT array_to_string(array_agg(idhabitacion||': '||'E. '||edificio||' N. '||numero_fisico),',') AS habitacion"
-												+ "  FROM (SELECT *"
-												+ "          FROM habitaciones"
-												+ "         ORDER BY idhabitacion) AS foo ");
-			if (res.next())
-			{
-				System.out.println(res.getString("habitacion"));
-				if (res.getString("habitacion") != null)
-				{
-					usuarios = (" ,"+res.getString("habitacion")).split(",");
-				}
-				else
-				{
-					usuarios = new String[] {" "};
-				}
-			}
-			lista = new JList(usuarios);
-			lista.setVisibleRowCount(5);
-			lista.addListSelectionListener(this);
-			lista.setSelectedIndex(0);
-			//lista.addFocusListener(fe);
-			lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			JScrollPane scroll = new JScrollPane(lista);
-			scroll.setBounds(0, 30, b, 270);
-			panelsito.setLayout(null);
-			panelsito.add(scroll);
-			panelCentro.add(panelsito);
-		}
-		catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	public void valueChanged(ListSelectionEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		//System.out.println(lista.getSelectedIndex() + " " + lista.getSelectedValue());
-		if (lista.getSelectedValue() != null)
-			if (lista.getSelectedValue().toString().trim().split(":")[0] != "")
-				idhabitacion.setText(""+lista.getSelectedValue().toString().trim().split(":")[0]);
-		
-		idhabitacion.requestFocus();
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
 	private ActionListener actionLins = new ActionListener()
@@ -217,9 +164,32 @@ public class Habitaciones extends Menu implements ActionListener
 					}
 					i++;
 				}
-				//JCGE: Es la señal que dice que quiere ver a un usuario existente
+				
 				try
 				{
+					//JCGE: Vamos a comprobar que la combinacion de edificio y habitacion no sean la misma que otra habitacion ya almacenada
+					r = new ArrayList<ResultSet>();
+					r.add(baseDatos.db.newQuery(String.format("SELECT r_found,r_mesj"
+															+ "  FROM hotel_existe_habitacion(%s,'%s','%s') ",
+															idhabitacion.getText(),textos.get(1).getText(), textos.get(2).getText() )));
+					//Si lo encuentra le hacemos el update
+					if (r.get(0).next())
+					{
+						if (r.get(0).getBoolean("r_found"))
+						{
+							JOptionPane.showMessageDialog(null, r.get(0).getString("r_mesj"));
+							return;
+						}
+					}
+				}
+				catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+				
+				try
+				{
+					//JCGE: Es la señal que dice que quiere ver a una habitacion existente
 					r = new ArrayList<ResultSet>();
 					r.add(baseDatos.db.newQuery(" SELECT * "
 												+"  FROM habitaciones "
@@ -251,14 +221,14 @@ public class Habitaciones extends Menu implements ActionListener
 						System.out.println(query);
 						baseDatos.db.newInsert(query);
 						
-						JOptionPane.showMessageDialog(null, "La habitación: "+idhabitacion.getText()+" fue agregada.");
+						JOptionPane.showMessageDialog(null, "La habitación fue agregada.");
 					}
 					buscar.setEnabled(true);
 				}
-				catch (SQLException e1)
+				catch (SQLException e)
 				{
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					e.printStackTrace();
 				}
 				
 				botonera.get(0).setEnabled(true); //Nuevo
@@ -331,7 +301,6 @@ public class Habitaciones extends Menu implements ActionListener
 	private void limpiarEntradas(boolean enabl)
 	{
 		int i = 1;
-		lista.setEnabled(!enabl);
 		for (HFTextField txt: textos)
 		{
 			if (i == 1)

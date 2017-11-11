@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class NuevoCuarto extends Menu implements ActionListener
 {
@@ -8,7 +9,8 @@ public class NuevoCuarto extends Menu implements ActionListener
 	 * aqui vamos agregar a un nuevo inquilino
 	 */
 	private static final long serialVersionUID = -137397340528622211L;
-	
+	private ArrayList<HFLabel> etiquetas;
+	private String[] labels;
 	NuevoCuarto()
 	{
 		this.setTitle("Nuevo Cuarto");
@@ -16,7 +18,7 @@ public class NuevoCuarto extends Menu implements ActionListener
 		rellenaToolBar(nombres, actionLins);
 		
 		//JCGE: Propiedades especificas.
-		
+		labels = new String[] {};
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
 	private ActionListener actionLins = new ActionListener()
