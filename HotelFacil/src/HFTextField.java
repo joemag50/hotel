@@ -1,17 +1,21 @@
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 
 public class HFTextField extends JTextField implements KeyListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -347408485368150523L;
+	
 	protected Font font = new Font("Ubuntu Mono", Font.PLAIN, 15);
 	public buscador frame;
 	public String busqueda;
 	public String query;
+	
 	HFTextField(int columns)
 	{
 		this.setColumns(columns);
@@ -19,8 +23,8 @@ public class HFTextField extends JTextField implements KeyListener
 		this.setFont(font);
 	}
 	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
+	public void keyPressed(KeyEvent e)
+	{
 		if (busqueda == null)
 		{
 			return;
@@ -30,13 +34,6 @@ public class HFTextField extends JTextField implements KeyListener
 			frame = new buscador(busqueda, query, this);
 		}
 	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
@@ -47,5 +44,7 @@ public class HFTextField extends JTextField implements KeyListener
 			e.consume();
 		}
 	}
+	@Override
+	public void keyReleased(KeyEvent e) {/*JCGE: Aun sin nada*/}
 
 }

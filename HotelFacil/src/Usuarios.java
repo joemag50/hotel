@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 
 public class Usuarios extends Menu implements ActionListener
 {
@@ -206,7 +205,6 @@ public class Usuarios extends Menu implements ActionListener
 				}
 				catch (SQLException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -362,7 +360,6 @@ public class Usuarios extends Menu implements ActionListener
 				}
 				catch (SQLException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -421,17 +418,12 @@ public class Usuarios extends Menu implements ActionListener
 	
 	private FocusListener fe = new FocusListener ()
 	{
-
-		@Override
-		public void focusGained(FocusEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
 		@Override
 		public void focusLost(FocusEvent arg0)
 		{
 			System.out.println(textos.get(0).getText());
 		}
+		@Override
+		public void focusGained(FocusEvent arg0) {/*JCGE: Aun sin nada*/}
 	};
 }

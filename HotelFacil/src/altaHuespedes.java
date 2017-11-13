@@ -6,16 +6,6 @@ public class altaHuespedes extends Menu implements ActionListener
 {
 	/**
 	 * JCGE: Modulo de alta de huespedes
-idhuesped           | integer                    
-paterno             | text                       
-materno             | text                       
-nombre              | text                       
-fechanacimiento     | date                       
-telefono            | text                       
-tarjeta             | text                       
-secret_num          | text                       
-ultimaactualizacion | timestamp without time zone
-
 	 */
 	private static final long serialVersionUID = -820968874016456007L;
 	private ArrayList<HFLabel> etiquetas;
@@ -52,6 +42,9 @@ ultimaactualizacion | timestamp without time zone
 			panelCentro.add(txt);
 			y+=25;
 		}
+		HFDateField datePicker = new HFDateField();
+		datePicker.setBounds(x,y,b,h);
+		panelCentro.add(datePicker);
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
 	private ActionListener actionLins = new ActionListener()

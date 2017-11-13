@@ -1,15 +1,16 @@
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.NumberFormat;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class HFIntegerField extends JTextField implements KeyListener, FocusListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4923626614052178707L;
 	public buscador frame;
 	public String busqueda;
 	public String query;

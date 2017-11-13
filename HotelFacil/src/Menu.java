@@ -1,66 +1,69 @@
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javax.swing.JButton;
-import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 public class Menu extends MainWindow implements ActionListener, ListSelectionListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6700237452042490767L;
+	/*
+	 * JCGE: Menu es la clase que soporta todos los modulos
+	 * */
 	public JToolBar toolBar;
 	public ArrayList<JButton> botonera;
-	//JCGE: Aca lo iniciamos mamalon
+	public static JDatePanelImpl datePanel;
+	//JCGE: Constructor del menu
 	Menu()
 	{
 		//JCGE: Propiedades Generales
-		this.setTitle("Principal");
-		checkPermisos();
-		panelCentro.setLayout(null);
-		toolBar = new JToolBar(null, JToolBar.HORIZONTAL);
+		this.setTitle("Principal");                                   //Nombre de la ventana
+		checkPermisos();                                              //Revisamos los permisos del usuario
+		panelCentro.setLayout(null);                                  //Sin layout para poner los widgets
+		botonera = new ArrayList<JButton>();                          //Iniciamos los botones de los modulos
+		toolBar = new JToolBar(null, JToolBar.HORIZONTAL);            //Iniciamos el toolbar
 		toolBar.setVisible(true);
-		
-		//JCGE: Propiedades Especificas
-		botonera = new ArrayList<JButton>();
-		toolBar.setBounds(0,0,Principal.ventana.WIDTH.intValue(),40);
+		toolBar.setBounds(0,0,MainWindow.WIDTH.intValue(),40);
 		panelCentro.add(toolBar);
-		//JCGE: Propiedades Particulares
-		l_titulo.setText("Usuario: " + baseDatos.db.getUsuario());
+		l_titulo.setText("Usuario: " + baseDatos.user_actual);    //Le cambiamos el usuario que esta usando el sistema
+		
+		//JCGE: Esto es parte de los campos que tienen fecha
+		//Lo ponemos disponible para la clase de HFDateField
+		//para que cuando creamos un nuevo campo de fecha, sea mas facil y sin tanto rollo
+		UtilDateModel model = new UtilDateModel();
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		//JCGE: datePanel es la ventana que muestra las fechas
+		datePanel = new JDatePanelImpl(model, p); 
 	}
+	//JCGE: Tenemos una botonera para todos los modulos
+	//Los botones dependen del modulo, entonces pueden ser N botones
 	public void rellenaToolBar(String[] botones, ActionListener l)
 	{
+		//JCGE: Dependiendo el tamaño de botones los ponemos
+		//De paso les ponemos el escuchador de acciones
+		//para detectar los "Clicks"
 		for (int i = 0;i <= botones.length-1; i++)
 		{
 			botonera.add(new JButton(botones[i]));
 			botonera.get(i).setEnabled(true);
 			botonera.get(i).addActionListener(l);
+			//JCGE: El toolbar no deberia de estar en varias locaciones
+			//Entonces lo ponemos estatico y facilmente lo agregamos desde aqui
 			toolBar.add(botonera.get(i));
 		}
 	}
-	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones dentro de la clase
-	private ActionListener actlin = new ActionListener()
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			String boton = e.getActionCommand();
-			System.out.println(boton);
-			if (boton == "kk")
-			{
-				//
-				System.out.println("hi");
-			}
-		}
-		
-	};
 	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void valueChanged(ListSelectionEvent arg0){/*JCGE: Sin acciones*/}
 }

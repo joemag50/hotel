@@ -1,14 +1,16 @@
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class HFDoubleField extends JTextField implements KeyListener, FocusListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1885229317474902943L;
 	HFDoubleField()
 	{
 		this.addKeyListener(this);

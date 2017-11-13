@@ -10,6 +10,7 @@ public class baseDatos
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	static final String db_url = "jdbc:postgresql:hotel";
 	
+	//JCGE: Estas variables son para la conexion y para los querys
 	static Connection conn = null;
 	static Statement stmt = null;
 	static baseDatos db;
@@ -20,16 +21,16 @@ public class baseDatos
 	//JCGE: Hay que encriptar esto
 	String usuario = "admhotel";
 	String pass = "5e77db835e922beb1920d92174b00b0c"; //MuseMuse50
-
+	
+	//JCGE: Aqui guardamos el usuario que esta actualmente en la ventana
+	public static String user_actual;
+	
 	//JCGE 30/09/2017: Constructor aca mamalon
 	baseDatos()
 	{
 		//JCGE 30/09/2017: Con esto nos aseguramos de que tiene conexion al instanciar
 		try
 		{
-			//usuario = p_usuario;
-			//String n_pass = utilMd5(pass);
-			//System.out.println(n_pass);
 			try
 			{
 				Class.forName("java.sql.Driver");
@@ -54,22 +55,15 @@ public class baseDatos
 			e.printStackTrace();
 		}
 	}
-	public void setUsuario (String p_usuario)
-	{
-		//JCGE: Vamos a asignar el usuario para la base de datos
-		baseDatos.db.usuario = p_usuario;
-		return;
-	}
-	public String getUsuario()
-	{
-		return usuario;
-	}
 	//JCGE 30/09/2017: Inicio de query
 	public void preQuery()
 	{
 		try
 		{
-			stmt = conn.createStatement();
+			if (conn != null)
+			{
+				stmt = conn.createStatement();
+			}
 		}
 		catch (SQLException e)
 		{
@@ -114,7 +108,8 @@ public class baseDatos
 		}
 		catch(SQLException se2)
 		{
-			// nothing we can do
+			mensaje = se2.getMessage();
+			se2.printStackTrace();
 		}
 		try
 		{

@@ -18,7 +18,7 @@ public class NuevoCuarto extends Menu implements ActionListener
 		rellenaToolBar(nombres, actionLins);
 		
 		//JCGE: Propiedades especificas.
-		labels = new String[] {};
+		labels = new String[] {"ejemplo"};
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
 	private ActionListener actionLins = new ActionListener()

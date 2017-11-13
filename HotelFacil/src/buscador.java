@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -9,7 +8,6 @@ import java.sql.SQLException;
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -18,9 +16,13 @@ import javax.swing.event.ListSelectionListener;
 
 public class buscador extends JFrame implements Action, ListSelectionListener, KeyListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2109227608072651896L;
 	//
 	protected Container frame;
-	private JList lista;
+	private JList<String> lista;
 	private JTextField campo;
 	buscador(String buscador, String query, JTextField entrada)
 	{
@@ -54,10 +56,9 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		}
 		catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		lista = new JList(usuarios);
+		lista = new JList<String>(usuarios);
 		lista.setVisibleRowCount(5);
 		lista.addListSelectionListener(this);
 		lista.setSelectedIndex(0);
@@ -72,29 +73,8 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		frame.add(titulo);
 	}
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Object getValue(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void putValue(String arg0, Object arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-	//JCGE: Para cuando cambie de esta cosa
-	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+	public void keyPressed(KeyEvent arg0)
+	{
 		if (arg0.getKeyCode() == 10)
 		{
 			if (lista.getSelectedValue() != null)
@@ -106,13 +86,16 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		}
 	}
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent arg0) {/*JCGE: Aun sin nada*/}
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent arg0) {/*JCGE: Aun sin nada*/}
+	@Override
+	public void actionPerformed(ActionEvent arg0) {/*JCGE: Aun sin nada*/}
+	@Override
+	public Object getValue(String arg0) {return null;}
+	@Override
+	public void putValue(String arg0, Object arg1) {/*JCGE: Aun sin nada*/}
+	@Override
+	public void valueChanged(ListSelectionEvent arg0) {/*JCGE: Aun sin nada*/}
+
 }

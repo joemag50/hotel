@@ -1,7 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.event.MenuListener;
 
 public class Login extends MainWindow
 {
@@ -35,6 +31,7 @@ public class Login extends MainWindow
 	{
 		//JCGE: Propiedades Generales
 		menuBar.setVisible(false);
+		baseDatos.user_actual = null; //JCGE: Cuando instanciamos el Login aun no sabemos el user
 		
 		//JCGE: Propiedades Particulares
 		user = new JTextField(50);
@@ -56,7 +53,6 @@ public class Login extends MainWindow
 		try
 		{
 		    img = ImageIO.read(new File("media/logo_hf.png"));
-			System.out.println("Imagen bien");
 		}
 		catch (IOException e)
 		{
@@ -91,7 +87,7 @@ public class Login extends MainWindow
 			//JCGE: La pregunta buenera... puede o no entrar?
 			if (validaLogin())
 			{
-				//System.out.println("TRUE");
+				baseDatos.user_actual = user.getText();
 				Principal.ventana.setVisible(false);
 				Principal.ventana.dispose();
 				Principal.ventana = new Menu();
@@ -134,8 +130,8 @@ public class Login extends MainWindow
 				JOptionPane.showMessageDialog(null,"Contraseña incorrecta\nIntentos: "+intentos+" \n"+prueba.getString(2));
 			}
 			return resul;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 		//Principal.db.endQuery();
@@ -146,12 +142,14 @@ public class Login extends MainWindow
 	{
 		baseDatos.db.preQuery();
 		ResultSet prueba = baseDatos.db.newQuery("SELECT * FROM hotel_valida_usuario ('"+user.getText()+"')");
-		try {
+		try
+		{
 			prueba.next();
 			Boolean resul = prueba.getBoolean(1);
 			return resul;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 		return false;

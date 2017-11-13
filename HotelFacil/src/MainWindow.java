@@ -2,41 +2,23 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Scanner;
-import java.util.Timer;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -44,6 +26,10 @@ import javax.swing.event.MenuListener;
 //Heredamos de JFrame para sacar de la libreria swing
 public class MainWindow extends JFrame implements ActionListener, MenuListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1171527061718987226L;
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	static final Double WIDTH = new Double(screenSize.getWidth());
 	static final Double HEIGHT = new Double(screenSize.getHeight());
@@ -64,7 +50,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		frame.setLayout(new BorderLayout());
 		//JCGE: Preparamos la ventana
 		this.setTitle("Main Window");
-		this.setSize(this.WIDTH.intValue()-400, this.HEIGHT.intValue()-200);
+		this.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-200);
 		//this.setSize(800, 599);
 		this.setResizable(false);
 		//this.setExtendedState(MAXIMIZED_BOTH);
@@ -164,7 +150,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		frame.add(menuBar, BorderLayout.NORTH);
 		frame.add(panelSur,   BorderLayout.SOUTH);
 		frame.add(panelCentro, BorderLayout.CENTER);
-		this.setSize(this.WIDTH.intValue()-400, this.HEIGHT.intValue()-201);
+		this.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-201);
 		this.setLocationRelativeTo(null);
 	}
 	public void checkPermisos()
@@ -297,20 +283,9 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		}
 	}
 	@Override
-	public void menuSelected(MenuEvent e)
-	{
-		System.out.println("menuSelected");
-	}
+	public void menuSelected(MenuEvent e) {/*JCGE: Aun sin nada*/}
 	@Override
-	public void menuCanceled(MenuEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		System.out.println("menuCanceled");
-	}
+	public void menuCanceled(MenuEvent arg0) {/*JCGE: Aun sin nada*/}
 	@Override
-	public void menuDeselected(MenuEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		System.out.println("menuDeselected");
-	}
+	public void menuDeselected(MenuEvent arg0) {/*JCGE: Aun sin nada*/}
 }
