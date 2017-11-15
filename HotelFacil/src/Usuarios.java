@@ -1,7 +1,5 @@
 import java.awt.event.*;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
 
@@ -16,7 +14,7 @@ public class Usuarios extends Menu implements ActionListener
 	static ArrayList<HFTextField> textos;
 	private ArrayList<ResultSet> r;
 	private JButton buscar;
-	private JFormattedTextField txtDate;
+	private HFDateField txtDate;
 	private ArrayList<JPasswordField> passwds;
 	private String[] tagz;
 	private Boolean esNuevo = false;
@@ -60,12 +58,9 @@ public class Usuarios extends Menu implements ActionListener
 			{
 				//JCGE: Buscar date picker
 				//JCGE: Vamos a poner un campo especial de fecha
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				txtDate = new JFormattedTextField(df);
+				txtDate = new HFDateField();
 				txtDate.setBounds(x,y,b,h);
-				txtDate.setVisible(true);
-				txtDate.setEnabled(false);
-				txtDate.setValue(new java.util.Date());
+				txtDate.resetDate();
 				panelCentro.add(txtDate);
 			}
 			else if (i == 2)
@@ -106,7 +101,6 @@ public class Usuarios extends Menu implements ActionListener
 				tex.setEnabled(false);
 				panelCentro.add(tex);
 			}
-			
 			y += 25;
 			i++;
 		}
@@ -159,7 +153,7 @@ public class Usuarios extends Menu implements ActionListener
 						textos.get(4).setText(r.get(0).getString("paterno"));
 						textos.get(5).setText(r.get(0).getString("materno"));
 						textos.get(1).setText(r.get(0).getString("tipo_usuario"));
-						txtDate.setValue(r.get(0).getDate("fechanacimiento"));
+						txtDate.setDate(r.get(0).getDate("fechanacimiento"));
 						textos.get(7).setText(r.get(0).getString("telefono"));
 						textos.get(8).setText(r.get(0).getString("curp"));
 						textos.get(9).setText(r.get(0).getString("rfc"));
@@ -179,6 +173,7 @@ public class Usuarios extends Menu implements ActionListener
 						botonera.get(0).setEnabled(false);
 						buscar.setEnabled(false);
 						estatus.setEnabled(true);
+						textos.get(0).setEnabled(false);
 					}
 					else
 					{
@@ -201,6 +196,7 @@ public class Usuarios extends Menu implements ActionListener
 						buscar.setEnabled(true);
 						estatus.setEnabled(false);
 						estatus.setSelected(false);
+						txtDate.resetDate();
 					}
 				}
 				catch (SQLException e1)
@@ -294,7 +290,7 @@ public class Usuarios extends Menu implements ActionListener
 									+ "                     '%s','%s','%s', %s) "
 									+ "WHERE idusuario = trim('%s')",
 									baseDatos.db.utilMd5(pss1),textos.get(4).getText(),  textos.get(5).getText(), textos.get(3).getText(),
-									txtDate.getValue(),        textos.get(7).getText(),  textos.get(8).getText(),
+									txtDate.getJFormattedTextField().getText(),textos.get(7).getText(),  textos.get(8).getText(),
 									textos.get(9).getText(),   textos.get(10).getText(), textos.get(1).getText(), estatus.isSelected(),
 									textos.get(0).getText());
 						}
@@ -308,7 +304,7 @@ public class Usuarios extends Menu implements ActionListener
 									+ "                     '%s','%s','%s',%s) "
 									+ "WHERE idusuario = trim('%s')",
 									textos.get(4).getText(), textos.get(5).getText(),  textos.get(3).getText(),
-									txtDate.getValue(),      textos.get(7).getText(),  textos.get(8).getText(),
+									txtDate.getJFormattedTextField().getText(),      textos.get(7).getText(),  textos.get(8).getText(),
 									textos.get(9).getText(), textos.get(10).getText(), textos.get(1).getText(), estatus.isSelected(),
 									textos.get(0).getText());
 						}
@@ -331,7 +327,7 @@ public class Usuarios extends Menu implements ActionListener
 												   + "        '%s','%s',TRUE,'%s')",
 												   textos.get(0).getText(), baseDatos.db.utilMd5(textos.get(2).getText()),
 												   textos.get(4).getText(), textos.get(5).getText(),  textos.get(3).getText(),
-												   txtDate.getValue(),      textos.get(7).getText(),  textos.get(8).getText(),
+												   txtDate.getJFormattedTextField().getText(),textos.get(7).getText(),  textos.get(8).getText(),
 												   textos.get(9).getText(), textos.get(10).getText(), textos.get(1).getText());
 						System.out.println(query);
 						baseDatos.db.newInsert(query);
@@ -349,7 +345,7 @@ public class Usuarios extends Menu implements ActionListener
 						p.setEnabled(false);
 						p.setText("");
 					}
-					txtDate.setEnabled(false);
+					txtDate.resetDate();
 					textos.get(0).setEnabled(true);
 					textos.get(0).requestFocus();
 					buscar.setEnabled(true);
@@ -376,7 +372,7 @@ public class Usuarios extends Menu implements ActionListener
 					p.setEnabled(false);
 					p.setText("");
 				}
-				txtDate.setEnabled(false);
+				txtDate.resetDate();
 				textos.get(0).setEnabled(true);
 				textos.get(0).requestFocus();
 				buscar.setEnabled(true);

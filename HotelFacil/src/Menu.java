@@ -7,7 +7,6 @@ import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 public class Menu extends MainWindow implements ActionListener, ListSelectionListener
@@ -21,7 +20,6 @@ public class Menu extends MainWindow implements ActionListener, ListSelectionLis
 	 * */
 	public JToolBar toolBar;
 	public ArrayList<JButton> botonera;
-	public static JDatePanelImpl datePanel;
 	//JCGE: Constructor del menu
 	Menu()
 	{
@@ -35,17 +33,6 @@ public class Menu extends MainWindow implements ActionListener, ListSelectionLis
 		toolBar.setBounds(0,0,MainWindow.WIDTH.intValue(),40);
 		panelCentro.add(toolBar);
 		l_titulo.setText("Usuario: " + baseDatos.user_actual);    //Le cambiamos el usuario que esta usando el sistema
-		
-		//JCGE: Esto es parte de los campos que tienen fecha
-		//Lo ponemos disponible para la clase de HFDateField
-		//para que cuando creamos un nuevo campo de fecha, sea mas facil y sin tanto rollo
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "Today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		//JCGE: datePanel es la ventana que muestra las fechas
-		datePanel = new JDatePanelImpl(model, p); 
 	}
 	//JCGE: Tenemos una botonera para todos los modulos
 	//Los botones dependen del modulo, entonces pueden ser N botones

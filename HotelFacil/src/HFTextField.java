@@ -32,6 +32,7 @@ public class HFTextField extends JTextField implements KeyListener
 		if (e.getKeyCode() == 114) //F3
 		{
 			frame = new buscador(busqueda, query, this);
+			this.setEnabled(false);
 		}
 	}
 	@Override

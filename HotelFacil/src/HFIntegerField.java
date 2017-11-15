@@ -40,6 +40,7 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 		if (e.getKeyCode() == 114) //F3
 		{
 			frame = new buscador(busqueda, query, this);
+			this.setEnabled(false);
 		}
 	}
 	@Override

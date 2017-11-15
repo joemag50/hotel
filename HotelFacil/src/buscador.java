@@ -46,7 +46,7 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 				System.out.println(res.getString(1));
 				if (res.getString(1) != null)
 				{
-					usuarios = (" ,"+res.getString(1)).split(",");
+					usuarios = (res.getString(1)).split(",");
 				}
 				else
 				{
@@ -78,7 +78,7 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		if (arg0.getKeyCode() == 10)
 		{
 			if (lista.getSelectedValue() != null)
-				if (lista.getSelectedValue().toString().trim().split(":")[0] != "")
+				if (lista.getSelectedValue().toString().trim().split(":")[0] != "")	
 					campo.setText(lista.getSelectedValue().toString().trim().split(":")[0]);
 			
 			this.setVisible(false);
