@@ -17,7 +17,7 @@ public class altaHuespedes extends Menu implements ActionListener
 	private ArrayList<HFTextField> textos;
 	private ArrayList<ResultSet>   r;
 	private ArrayList<HFDateField> datePickers;
-	private HFIntegerField         idhuesped;
+	public static HFIntegerField  idhuesped;
 	private JButton                buscar;
 	private String[]               labels = {"Num huesped: ","Paterno: ","Materno: ",
 											 "Nombre: ","Fecha Nacimiento: ","Telefono: ",
@@ -80,6 +80,7 @@ public class altaHuespedes extends Menu implements ActionListener
 			y+=25;
 		}
 		limpiarEntradas(false);
+		datePickers.get(1).setEnabl(false);
 		botonera.get(0).setEnabled(true);
 		botonera.get(1).setEnabled(false);
 		botonera.get(2).setEnabled(false);
@@ -111,6 +112,7 @@ public class altaHuespedes extends Menu implements ActionListener
 															+ "  WHERE idhuesped = %s ",idhuesped.getText())));
 					if (r.get(0).next())
 					{
+						limpiarEntradas(true);
 						int i = 1;
 						for (HFTextField txt: textos)
 						{
@@ -130,7 +132,6 @@ public class altaHuespedes extends Menu implements ActionListener
 							}
 							i++;
 						}
-						limpiarEntradas(true);
 					}
 					else
 					{
@@ -237,7 +238,6 @@ public class altaHuespedes extends Menu implements ActionListener
 		}
 		for (HFDateField dte: datePickers)
 		{
-			dte.setEnabl(enabl);
 			dte.resetDate();
 		}
 		idhuesped.setEnabled(!enabl);
@@ -246,5 +246,6 @@ public class altaHuespedes extends Menu implements ActionListener
 		{
 			idhuesped.requestFocus();
 		}
+		datePickers.get(0).setEnabl(enabl);
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class HFIntegerField extends JTextField implements KeyListener, FocusListener
 {
@@ -14,11 +15,22 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 	public buscador frame;
 	public String busqueda;
 	public String query;
+	private   boolean  bloquearAlEnter = true;
+	private   JTextField retorno;
 	HFIntegerField()
 	{
 		this.addKeyListener(this);
 		this.addFocusListener(this);
 		this.setText("0");
+		this.setHorizontalAlignment(RIGHT);
+	}
+	public void bloqueaAlEnter(boolean b)
+	{
+		this.bloquearAlEnter = b;
+	}
+	public void retornaDescripcion(JTextField jtf)
+	{
+		this.retorno = jtf;
 	}
 	@Override
 	public void keyTyped(KeyEvent e)
@@ -39,8 +51,15 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 		}
 		if (e.getKeyCode() == 114) //F3
 		{
-			frame = new buscador(busqueda, query, this);
-			this.setEnabled(false);
+			if (retorno != null)
+			{
+				frame = new buscador(busqueda, query, this, retorno);
+			}
+			else
+			{
+				frame = new buscador(busqueda, query, this);
+			}
+			this.setEnabled(!this.bloquearAlEnter);
 		}
 	}
 	@Override

@@ -280,6 +280,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana.dispose();
 			Principal.ventana = new altaHuespedes();
 			Principal.ventana.finGUI();
+			altaHuespedes.idhuesped.requestFocus();
 		}
 	}
 	@Override

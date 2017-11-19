@@ -21,10 +21,15 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 	 */
 	private static final long serialVersionUID = 2109227608072651896L;
 	//
-	protected Container frame;
-	private JList<String> lista;
-	private JTextField campo;
+	protected Container     frame;
+	private   JList<String> lista;
+	private   JTextField    campo;
+	private   JTextField    retorno;
 	buscador(String buscador, String query, JTextField entrada)
+	{
+		this(buscador, query, entrada, null);
+	}
+	buscador(String buscador, String query, JTextField entrada, JTextField salida)
 	{
 		frame = getContentPane();
 		frame.setLayout(null);
@@ -37,6 +42,8 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
 		this.campo = entrada;
+		if (salida != null)
+			this.retorno = salida;
 		String[] usuarios = new String[] {" "};
 		try
 		{
@@ -67,8 +74,10 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane scroll = new JScrollPane(lista);
 		HFLabel titulo = new HFLabel(buscador);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		titulo.setBounds(0,0,300,20);
-		scroll.setBounds(0, 20, 300, 480);
+		scroll.setBounds(0, 20, 300, 455);
 		frame.add(scroll);
 		frame.add(titulo);
 	}
@@ -78,9 +87,12 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		if (arg0.getKeyCode() == 10)
 		{
 			if (lista.getSelectedValue() != null)
-				if (lista.getSelectedValue().toString().trim().split(":")[0] != "")	
-					campo.setText(lista.getSelectedValue().toString().trim().split(":")[0]);
-			
+				if (lista.getSelectedValue().toString().trim().split(": ")[0] != "")	
+					campo.setText(lista.getSelectedValue().toString().trim().split(": ")[0]);
+					if (retorno != null)
+					{
+						retorno.setText(lista.getSelectedValue().toString().trim().split(": ")[1]);
+					}
 			this.setVisible(false);
 			this.dispose();
 		}

@@ -18,7 +18,7 @@ public class HFDateField extends JDatePickerImpl
 	}
 	public void resetDate()
 	{
-		this.getJFormattedTextField().setValue(toCalendar(new java.util.Date()));
+		this.getJFormattedTextField().setValue(toCalendar(new Date()));
 	}
 	public void setDate(Date fechita)
 	{

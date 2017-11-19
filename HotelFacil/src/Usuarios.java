@@ -40,7 +40,7 @@ public class Usuarios extends Menu implements ActionListener
 		{
 			etiquetas.add(new HFLabel(tagz[i]));
 		}
-		int x = 10, y = 70, b = 120, h = 20;
+		int x = 10, y = 70, b = 200, h = 20;
 		for(HFLabel tag: etiquetas)
 		{
 			tag.setBounds(x,y,b,h);
@@ -49,7 +49,7 @@ public class Usuarios extends Menu implements ActionListener
 			textos.add(new HFTextField(200));
 		}
 		
-		x = b; y = 70; b = 200; h = 20;
+		x = b + 10; y = 70; b = 200; h = 20;
 		
 		int i = 0;
 		for (HFTextField tex: textos)

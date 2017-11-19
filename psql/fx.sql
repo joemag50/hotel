@@ -102,3 +102,28 @@ BEGIN
 END;$$
 LANGUAGE plpgsql;
 
+
+--------------------------
+-- JCGE: Funcion para retornar cuanto cuesta por persona
+--------------------------
+CREATE OR REPLACE FUNCTION hotel_precioxpersona (p_nacimiento DATE)
+  RETURNS NUMERIC AS $$
+DECLARE
+  --Variables
+  edad INTEGER;
+BEGIN
+  --JCGE: Si la fecha de nacimiento es nula, pues regresamos cero
+  IF (p_nacimiento IS NULL) THEN
+    RETURN 0.00;
+  END IF;
+  --JCGE: Obtenemos la edad la fecha de nacimiento
+  edad := (string_to_array(age(p_nacimiento)::TEXT,' '))[1];
+  --JCGE: Si es menor de edad o de la tercera edad, le cobramos menos
+  IF (edad < 18 OR edad >= 65) THEN
+    RETURN 250.00;
+  ELSE
+    --JCGE: Cobro normal
+    RETURN 500.00;
+  END IF;
+END;$$
+LANGUAGE plpgsql;

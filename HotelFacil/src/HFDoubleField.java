@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class HFDoubleField extends JTextField implements KeyListener, FocusListener
 {
@@ -16,6 +17,7 @@ public class HFDoubleField extends JTextField implements KeyListener, FocusListe
 		this.addKeyListener(this);
 		this.addFocusListener(this);
 		this.setText("0.00");
+		this.setHorizontalAlignment(RIGHT);
 	}
 	@Override
 	public void keyTyped(KeyEvent e)

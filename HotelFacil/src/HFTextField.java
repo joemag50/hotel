@@ -11,16 +11,25 @@ public class HFTextField extends JTextField implements KeyListener
 	 */
 	private static final long serialVersionUID = -347408485368150523L;
 	
-	protected Font font = new Font("Ubuntu Mono", Font.PLAIN, 15);
-	public buscador frame;
-	public String busqueda;
-	public String query;
-	
+	protected Font       font = new Font("Ubuntu Mono", Font.PLAIN, 15);
+	public    buscador   frame;
+	public    String     busqueda;
+	public    String     query;
+	private   boolean    bloquearAlEnter = true;
+	private   JTextField retorno;
 	HFTextField(int columns)
 	{
 		this.setColumns(columns);
 		this.addKeyListener(this);
 		this.setFont(font);
+	}
+	public void bloqueaAlEnter(boolean b)
+	{
+		this.bloquearAlEnter = b;
+	}
+	public void retornaDescripcion(JTextField jtf)
+	{
+		this.retorno = jtf;
 	}
 	@Override
 	public void keyPressed(KeyEvent e)
@@ -31,8 +40,15 @@ public class HFTextField extends JTextField implements KeyListener
 		}
 		if (e.getKeyCode() == 114) //F3
 		{
-			frame = new buscador(busqueda, query, this);
-			this.setEnabled(false);
+			if (retorno != null)
+			{
+				frame = new buscador(busqueda, query, this, retorno);
+			}
+			else
+			{
+				frame = new buscador(busqueda, query, this);
+			}
+			this.setEnabled(!this.bloquearAlEnter);
 		}
 	}
 	@Override
