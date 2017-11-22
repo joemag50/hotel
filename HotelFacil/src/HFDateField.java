@@ -1,3 +1,6 @@
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,6 +26,18 @@ public class HFDateField extends JDatePickerImpl
 	public void setDate(Date fechita)
 	{
 		this.getJFormattedTextField().setValue(toCalendar(fechita));
+	}
+	public void setDate(String fechita)
+	{
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = null;
+		try {
+			date = format.parse(fechita);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.getJFormattedTextField().setValue(toCalendar(date));
 	}
 	//JCGE: Sonaria logico que lo pusiera en Date, pero me sirve mas como String
 	public String getDate()

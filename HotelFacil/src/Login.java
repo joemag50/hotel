@@ -70,8 +70,10 @@ public class Login extends MainWindow
 	{
 		String boton = arg0.getActionCommand();
 		System.out.println(boton);
+		user.setText("joemag50");
 		if (boton == "Entrar")
 		{
+			/*
 			if (user.getText().length() == 0)
 			{
 				//JCGE: le decimos que no manche, que ponga un usuario
@@ -95,6 +97,13 @@ public class Login extends MainWindow
 				//Pequeño hack para que actualice la pantalla
 				//Principal.ventana.setSize(850, 600);
 			}
+			*/
+			validaLogin();
+			baseDatos.user_actual = user.getText();
+			Principal.ventana.setVisible(false);
+			Principal.ventana.dispose();
+			Principal.ventana = new Menu();
+			Principal.ventana.finGUI();
 		}
 	}
 	public Boolean validaLogin()

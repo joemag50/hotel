@@ -127,3 +127,20 @@ BEGIN
   END IF;
 END;$$
 LANGUAGE plpgsql;
+
+
+--------------------------
+-- JCGE: Funcion para regresar el tipo de solicitud
+--------------------------
+CREATE OR REPLACE FUNCTION hotel_solicitud_estatus (estatus INTEGER)
+  RETURNS TEXT AS $$
+DECLARE
+  --Variables
+  arr TEXT[] := ARRAY['Reservación', 'Activa', 'Terminada', 'Cancelada'];
+BEGIN
+  --
+  RETURN arr[estatus+1]
+END;$$
+LANGUAGE plpgsql;
+
+array_agg(format('%s: %s %s %s : FN = %s',idhuesped,paterno,materno,nombre,fechanacimiento))

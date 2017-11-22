@@ -3,6 +3,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -17,6 +18,7 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 	public String query;
 	private   boolean  bloquearAlEnter = true;
 	private   JTextField retorno;
+	private   JFormattedTextField retorno2;
 	HFIntegerField()
 	{
 		this.addKeyListener(this);
@@ -31,6 +33,10 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 	public void retornaDescripcion(JTextField jtf)
 	{
 		this.retorno = jtf;
+	}
+	public void retornaDescripcion2(JFormattedTextField jtf)
+	{
+		this.retorno2 = jtf;
 	}
 	@Override
 	public void keyTyped(KeyEvent e)
@@ -53,7 +59,15 @@ public class HFIntegerField extends JTextField implements KeyListener, FocusList
 		{
 			if (retorno != null)
 			{
-				frame = new buscador(busqueda, query, this, retorno);
+				if (retorno2 != null)
+				{
+					//
+					frame = new buscador(busqueda, query, this, retorno, retorno2);
+				}
+				else
+				{
+					frame = new buscador(busqueda, query, this, retorno);
+				}
 			}
 			else
 			{

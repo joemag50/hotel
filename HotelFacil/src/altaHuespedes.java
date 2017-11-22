@@ -100,6 +100,24 @@ public class altaHuespedes extends Menu implements ActionListener
 				botonera.get(1).setEnabled(true);
 				botonera.get(2).setEnabled(true);
 				limpiarEntradas(true);
+				String query = " SELECT COALESCE(max(idhuesped),0) +1 FROM huespedes ";
+				try
+				{
+					r = new ArrayList<ResultSet>();
+					r.add(baseDatos.db.newQuery(query));
+					if (r.get(0).next())
+					{
+						idhuesped.setText(r.get(0).getString(1));
+					}
+					else
+					{
+						idhuesped.setText("0");
+					}
+				}
+				catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
 				textos.get(1).requestFocus();
 			}
 			if (boton == "Buscar")
@@ -132,9 +150,15 @@ public class altaHuespedes extends Menu implements ActionListener
 							}
 							i++;
 						}
+						botonera.get(0).setEnabled(false);
+						botonera.get(1).setEnabled(true);
+						botonera.get(2).setEnabled(true);
 					}
 					else
 					{
+						botonera.get(0).setEnabled(true);
+						botonera.get(1).setEnabled(false);
+						botonera.get(2).setEnabled(false);
 						limpiarEntradas(false);
 						JOptionPane.showMessageDialog(null,"El huesped no existe");
 					}
@@ -144,9 +168,6 @@ public class altaHuespedes extends Menu implements ActionListener
 					e1.printStackTrace();
 					limpiarEntradas(false);
 				}
-				botonera.get(0).setEnabled(false);
-				botonera.get(1).setEnabled(true);
-				botonera.get(2).setEnabled(true);
 			}
 			if (boton == "Guardar")
 			{
