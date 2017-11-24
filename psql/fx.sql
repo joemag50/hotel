@@ -139,8 +139,71 @@ DECLARE
   arr TEXT[] := ARRAY['Reservación', 'Activa', 'Terminada', 'Cancelada'];
 BEGIN
   --
-  RETURN arr[estatus+1]
+  RETURN arr[estatus+1];
 END;$$
 LANGUAGE plpgsql;
 
-array_agg(format('%s: %s %s %s : FN = %s',idhuesped,paterno,materno,nombre,fechanacimiento))
+
+--------------------------
+-- JCGE: Funcion para regresar el estatus de una habitacion
+--------------------------
+CREATE OR REPLACE FUNCTION hotel_habitacion_estatus (p_idhabitacion INTEGER, p_fecha DATE)
+  RETURNS TEXT AS $$
+DECLARE
+  --Variables
+  arr TEXT[] := ARRAY['Libre', 'Ocupada', 'X'];
+BEGIN
+  --JCGE: De jodido que exista la habitacion
+  PERFORM * FROM habitaciones WHERE idhabitacion = p_idhabitacion;
+  IF (NOT FOUND) THEN
+    RETURN arr[3];
+  END IF;
+  --JCGE: Si es un dia que ya paso
+  IF (p_fecha < now()::DATE) THEN
+    RETURN arr[3];
+  END IF;
+  --JCGE: Buscamos si en el futuro va a estar libre u ocupada
+  PERFORM *
+    FROM hospedajes
+   WHERE idhabitacion = p_idhabitacion AND 
+         (p_fecha BETWEEN fecha_inicio AND fecha_fin);
+  IF FOUND THEN
+    RETURN arr[2];
+  END IF;
+  --JCGE: Significa que no encontro ninguna reservacion
+  RETURN arr[1];
+END;$$
+LANGUAGE plpgsql;
+
+
+--------------------------
+-- JCGE: Funcion para regresar el estatus de una habitacion
+--------------------------
+CREATE OR REPLACE FUNCTION hotel_hospedaje_actual_info (p_idhabitacion INTEGER)
+  RETURNS TEXT AS $$
+DECLARE
+  --Variables
+  regreso TEXT := 'X';
+  r       RECORD;
+BEGIN
+  --JCGE: De jodido que exista la habitacion
+  PERFORM * FROM habitaciones WHERE idhabitacion = p_idhabitacion;
+  IF (NOT FOUND) THEN
+    RETURN regreso;
+  END IF;
+  --JCGE: Buscamos quien actualmente la esta ocupando
+  SELECT INTO r paterno||' '||materno||' '||nombre AS nombre_completo,
+                fecha_inicio, fecha_fin
+    FROM hospedajes
+    LEFT JOIN huespedes USING (idhuesped)
+   WHERE idhabitacion = p_idhabitacion AND 
+         (now()::DATE BETWEEN fecha_inicio AND fecha_fin);
+  IF FOUND THEN
+    regreso := format(E'Titular: %s %s %s \n'|+
+                      E' Inicio: %s Final: %s',r.nombre_completo,r.fecha_inicio, r.fecha_fin);
+  END IF;
+  --JCGE: Significa que no encontro ninguna reservacion
+  RETURN regreso;
+END;$$
+LANGUAGE plpgsql;
+

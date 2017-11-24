@@ -386,7 +386,7 @@ public class Usuarios extends Menu implements ActionListener
 				//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");
 				Principal.ventana.setVisible(false);
 				Principal.ventana.dispose();
-				Principal.ventana = new habitacionesGrid();
+				Principal.ventana = new Menu();
 				Principal.ventana.finGUI();
 			}
 			if (boton == "Nuevo")

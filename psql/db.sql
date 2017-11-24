@@ -148,12 +148,16 @@ CREATE TABLE calles (idcalle   SERIAL PRIMARY KEY,
 --INSERT INTO usuarios VALUES ('joemag50',md5('MuseMuse50'),DEFAULT,'GAMBOA','ESPARZA','JOSE CARLOS','06/09/1996','83702083','CRUP','RFC','NSS',TRUE,'ADM');
 
 
---INSERT INTO habitaciones VALUES (1, 'Rojo', 'A', 1, 'Dos camas') ;
---INSERT INTO habitaciones VALUES (2, 'Rojo', 'B', 2, 'Un baño') ;
---INSERT INTO habitaciones VALUES (3, 'Rojo', 'C', 1, 'Vista al mar') ;
---INSERT INTO habitaciones VALUES (4, 'Azul', 'A', 2, 'Piso de madera') ;
---INSERT INTO habitaciones VALUES (5, 'Azul', 'B', 1, 'Ultra delujo') ;
---INSERT INTO habitaciones VALUES (6, 'Azul', 'C', 2, 'Tres camas') ;
+--INSERT INTO habitaciones VALUES (1, 'Azul', '1', 100.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (2, 'Azul', '2', 200.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (3, 'Azul', '3', 300.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (4, 'Azul', '4', 400.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (5, 'Azul', '5', 500.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (6, 'Azul', '6', 600.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (7, 'Azul', '7', 700.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (8, 'Azul', '8', 800.00, 'Descripcion');
+--INSERT INTO habitaciones VALUES (9, 'Azul', '9', 900.00, 'Descripcion');
+
 --INSERT INTO precios VALUES (1, 'Habitacion sencilla', 10.0) ;
 --INSERT INTO precios VALUES (2, 'Habitacion doble', 20.0) ;
 --INSERT INTO precios VALUES (3, 'Habitacion VIP', 50.0) ;

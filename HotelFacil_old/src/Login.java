@@ -102,7 +102,7 @@ public class Login extends MainWindow
 			baseDatos.user_actual = user.getText();
 			Principal.ventana.setVisible(false);
 			Principal.ventana.dispose();
-			Principal.ventana = new habitacionesGrid();
+			Principal.ventana = new Menu();
 			Principal.ventana.finGUI();
 		}
 	}

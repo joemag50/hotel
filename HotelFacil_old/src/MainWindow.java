@@ -41,8 +41,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	
 	public ArrayList<JMenu> menuz;
 	public ArrayList<JMenuItem> menuItems;
-	//public String[] nombres_menu = {"Administración","Operación","Mi Cuenta"};
-	public String[] nombres_menu = {"Administración","Mi Cuenta"};
+	public String[] nombres_menu = {"Administración","Operación","Mi Cuenta"};
 	//JCGE: Constructor aca mamalon
 	MainWindow ()
 	{
@@ -91,7 +90,6 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		}
 		
 		menuItems = new ArrayList<JMenuItem>();
-		/*
 		menuItems.add(new JMenuItem("Usuarios"));
 		menuItems.add(new JMenuItem("Reportes del Gerente"));
 		menuItems.add(new JMenuItem("Habitaciones"));
@@ -113,16 +111,11 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		menuz.get(1).add(menuItems.get(5));
 		
 		menuItems.add(new JMenuItem("Mi Cuenta"));
-		menuItems.get(menuItems.size()-1).addActionListener(this);
-		menuz.get(2).add(menuItems.get(menuItems.size()-1));
-		*/
-		menuItems.add(new JMenuItem("Usuarios"));
-		menuItems.get(menuItems.size()-1).addActionListener(this);
-		menuz.get(0).add(menuItems.get(menuItems.size()-1));
-		
+		menuItems.get(6).addActionListener(this);
+		menuz.get(2).add(menuItems.get(6));
 		menuItems.add(new JMenuItem("Salir"));
-		menuItems.get(menuItems.size()-1).addActionListener(this);
-		menuz.get(1).add(menuItems.get(menuItems.size()-1));
+		menuItems.get(7).addActionListener(this);
+		menuz.get(2).add(menuItems.get(7));
 		
 		//Les asignamos un borde para identificarlo
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));

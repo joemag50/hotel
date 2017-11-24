@@ -24,6 +24,7 @@ public class baseDatos
 	
 	//JCGE: Aqui guardamos el usuario que esta actualmente en la ventana
 	public static String user_actual;
+	
 	//JCGE 30/09/2017: Constructor aca mamalon
 	baseDatos()
 	{
@@ -53,56 +54,6 @@ public class baseDatos
 			JOptionPane.showMessageDialog(null,"Error " + sqlState + ": " + mensaje);
 			e.printStackTrace();
 		}
-	}
-	public static String estatusHabitacion(int p_idhabitacion, String p_fecha)
-	{
-		String estatus = "";
-		try
-		{
-			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_habitacion_estatus(%s, %s::DATE)", p_idhabitacion, p_fecha));
-			if (res.next())
-			{
-				System.out.println(res.getString(1));
-				if (res.getString(1) != null)
-				{
-					estatus = res.getString(1);
-				}
-			}
-		}
-		catch (SQLException e)
-		{
-			String mensaje = e.getMessage();
-			//JCGE: Esto es para encontrar mas facil el error
-			String sqlState = e.getSQLState();
-			JOptionPane.showMessageDialog(null,"Error " + sqlState + ": " + mensaje);
-			e.printStackTrace();
-		}
-		return estatus;
-	}
-	//JCGE: Buscamos el nivel de permiso que tenga el usuario y lo mantenemos en el aire
-	public static String nivelUsuario()
-	{
-		String nivel = "";
-		try
-		{
-			ResultSet res = baseDatos.db.newQuery(String.format("SELECT tipo_usuario FROM usuarios WHERE idusuario = '%s' ", user_actual));
-			if (res.next())
-			{
-				System.out.println(res.getString(1));
-				if (res.getString(1) != null)
-				{
-					nivel = res.getString(1);
-				}
-			}
-		}
-		catch (SQLException e)
-		{
-			String mensaje = e.getMessage();
-			//JCGE: Esto es para encontrar mas facil el error
-			String sqlState = e.getSQLState();
-			JOptionPane.showMessageDialog(null,"Error " + sqlState + ": " + mensaje);
-		}
-		return nivel;
 	}
 	//JCGE 30/09/2017: Inicio de query
 	public void preQuery()
