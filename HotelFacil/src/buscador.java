@@ -120,7 +120,7 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 				if (lista.getSelectedValue() != null)
 					if (lista.getSelectedValue().toString().trim() != "")
 					{	
-						//
+						/*
 						if (!NuevoCuarto.existeHuesped(lista.getSelectedValue().toString().trim()))
 						{
 							NuevoCuarto.nuevoHuesped(lista.getSelectedValue().toString().trim());
@@ -129,6 +129,7 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 						{
 							JOptionPane.showMessageDialog(null, "Ya existe este registro.");
 						}
+						*/
 					}
 				buscador.this.setVisible(false);
 				buscador.this.dispose();

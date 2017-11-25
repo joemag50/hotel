@@ -1,24 +1,33 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class habitacionesGrid extends Menu implements ActionListener
+public class habitacionesGrid extends MenuInterno implements ActionListener
 {
 	/**
 	 * JCGE: Modulo de habitacionesGrid
 	 * 
 	 */
+	private static final long serialVersionUID = -1400423738500557806L;
 	public ArrayList<JButton> botones ;
 	public estatusHabitacion estHab;
-	private static final long serialVersionUID = -1400423738500557806L;
-	int N = 4;
+	public MenuInterno ventanitas;
 	habitacionesGrid()
 	{
+		//JCGE: Propiedades de ventana
 		this.setTitle("Menu");
+		this.setClosable(false);
+		//this.setExtendedState(MAXIMIZED_BOTH);
+		//this.setLocationRelativeTo(null);
+		//panelCentro.setLayout(null);
+		//toolBar.setVisible(false);
+		
+		//JCGE: Propiedades especificas
 		JPanel p = new JPanel(new GridLayout(3, 3));
 		botones = new ArrayList<JButton>();
 		
@@ -47,7 +56,7 @@ public class habitacionesGrid extends Menu implements ActionListener
         }
         p.setVisible(true);
         p.setBounds(150,150,800,400);
-        panelCentro.add(p);
+        panelInterno.add(p);
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
 	private ActionListener actionLins = new ActionListener()
@@ -57,20 +66,17 @@ public class habitacionesGrid extends Menu implements ActionListener
 		{
 			String boton = arg0.getActionCommand();
 			System.out.println(boton);
-			if (boton == "Menu")
-			{
-				//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");
-				Principal.ventana.setVisible(false);
-				Principal.ventana.dispose();
-				Principal.ventana = new Menu();
-				Principal.ventana.finGUI();
-				return;
-			}
 			//JCGE: Cuando de click siempre va a mostrar
-			estHab = new estatusHabitacion(boton);
-			estHab.finGUI();
-			estHab.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-200);
+			MainWindow.newMenuInterno(new estatusHabitacion(boton));
+			//estHab.finGUI();
+			//estHab.setWindowSize(estHab, 400, 200);
+			//estHab.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-200);
 		}
 		
 	};
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

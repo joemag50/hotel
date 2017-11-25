@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -11,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-public class estatusHabitacion extends Menu implements ActionListener
+public class estatusHabitacion extends MenuInterno implements ActionListener
 {
 	/**
 	 * 
@@ -24,8 +25,10 @@ public class estatusHabitacion extends Menu implements ActionListener
 	private ArrayList<JTextArea> descrip;
 	private JPanel             agenda;
 	private ArrayList<JPanel>  dias;
-	private int idhabitacion;
+	public static int idhabitacion;
 	private Font bigFont = new Font("Ubuntu Mono", Font.BOLD, 18);
+	public MainWindow NuevoCuarto;
+	public Checkout Checkout;
 	estatusHabitacion(String habitacion)
 	{
 		//JCGE: Tenemos el numero de habitacion
@@ -33,11 +36,14 @@ public class estatusHabitacion extends Menu implements ActionListener
 		
 		//JCGE: Propiedades de la ventana
 		this.setTitle("Estatus Habitación");
-		menuBar.setVisible(false);
+		//this.setExtendedState(NORMAL);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		String[] nombres = {"Salir"};
-		rellenaToolBar(nombres, this);
+		//this.setLocationRelativeTo(null);
 		
+		//panelCentro.setLayout(null);
+		//menuBar.setVisible(false);
+		//String[] nombres = {"Salir"};
+		//rellenaToolBar(nombres, this);
 		
 		//JCGE: Propiedades adentro de la ventana
 		int x = 30, y = 80, width = 300, height = 30;
@@ -59,6 +65,7 @@ public class estatusHabitacion extends Menu implements ActionListener
 		y+=35;
 		desc = new JTextArea();
 		desc.setBounds(x, y, width, 130);
+		desc.setText(baseDatos.masInfoHabitacion(idhabitacion));
 		y+=150;
 		
 		//JCGE: Botones
@@ -71,7 +78,8 @@ public class estatusHabitacion extends Menu implements ActionListener
 		{
 			bt.setBounds(x, y, width, 50);
 			bt.addActionListener(this);
-			panelCentro.add(bt);
+			//panelCentro.add(bt);
+			panelInterno.add(bt);
 			y+=60;
 		}
 		
@@ -94,9 +102,6 @@ public class estatusHabitacion extends Menu implements ActionListener
 			int dia = (i+1),
 				mes = Integer.parseInt(HFDateField.mes.format(HFDateField.DateActual)),
 				ejercicio = Integer.parseInt(HFDateField.ejercicio.format(HFDateField.DateActual));
-			etiquetas.add(new HFLabel("Día: "+dia));
-			descrip.add(new JTextArea());
-			System.out.println(""+HFDateField.ducm[mes-1]);
 			if (dia == HFDateField.ducm[mes-1])
 			{
 				dia = 1; mes += 1;
@@ -105,6 +110,8 @@ public class estatusHabitacion extends Menu implements ActionListener
 					ejercicio++;
 				}
 			}
+			etiquetas.add(new HFLabel(""+dia));
+			descrip.add(new JTextArea());
 			String fecha = String.format("'%s/%s/%s'", dia, mes, ejercicio);
 			String estatus = baseDatos.estatusHabitacion(idhabitacion, fecha);
 			descrip.get(descrip.size()-1).setText(estatus);
@@ -125,13 +132,13 @@ public class estatusHabitacion extends Menu implements ActionListener
 			agenda.add(dias.get(dias.size()-1));
 		}
 		
-		panelCentro.add(lAgenda);
-		panelCentro.add(habi);
-		panelCentro.add(agenda);
-		panelCentro.add(lMasInfo);
-		panelCentro.add(desc);
-		panelCentro.add(lEstatus);
-		panelCentro.add(estatus);
+		panelInterno.add(lAgenda);
+		panelInterno.add(habi);
+		panelInterno.add(agenda);
+		panelInterno.add(lMasInfo);
+		panelInterno.add(desc);
+		panelInterno.add(lEstatus);
+		panelInterno.add(estatus);
 		//JCGE: bloqueamos o mostramos dependiendo el permiso
 		permisos();
 		estatus.setText(baseDatos.estatusHabitacion(idhabitacion, "now()"));
@@ -191,6 +198,24 @@ public class estatusHabitacion extends Menu implements ActionListener
 	{
 		String boton = arg0.getActionCommand();
 		System.out.println(boton);
+		if (boton == "Crear Reservación")
+		{
+			MainWindow.newMenuInterno(new NuevoCuarto());
+		}
+		if (boton == "Check Out")
+		{
+			Checkout = new Checkout();
+			Checkout.finGUI();
+			Checkout.setWindowSize(Checkout, 399, 199);
+		}
+		if (boton == "Enviar Limpieza")
+		{
+			
+		}
+		if (boton == "Limpieza Terminada")
+		{
+			
+		}
 		if (boton == "Salir")
 		{
 			//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");

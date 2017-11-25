@@ -31,6 +31,7 @@ public class Usuarios extends Menu implements ActionListener
 						"F. Nacimiento: ","Télefono: ",
 						"CURP: ","RFC: ","NSS: ","Estatus: "};
 		String[] nombres = {"Nuevo","Guardar","Cancelar","Menu"};
+		toolBar.setVisible(true);
 		rellenaToolBar(nombres, actionLins);
 		botonera.get(1).setEnabled(false);
 		etiquetas = new ArrayList<HFLabel>();
@@ -386,8 +387,9 @@ public class Usuarios extends Menu implements ActionListener
 				//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");
 				Principal.ventana.setVisible(false);
 				Principal.ventana.dispose();
-				Principal.ventana = new habitacionesGrid();
+				Principal.ventana = new Menu();
 				Principal.ventana.finGUI();
+				Principal.ventana.setWindowSize(Principal.ventana, 40, 40);
 			}
 			if (boton == "Nuevo")
 			{

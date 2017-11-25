@@ -54,6 +54,31 @@ public class baseDatos
 			e.printStackTrace();
 		}
 	}
+	public static String masInfoHabitacion(int p_idhabitacion)
+	{
+		String info = "";
+		try
+		{
+			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_hospedaje_actual_info(%s)", p_idhabitacion));
+			if (res.next())
+			{
+				System.out.println(res.getString(1));
+				if (res.getString(1) != null)
+				{
+					info = res.getString(1);
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			String mensaje = e.getMessage();
+			//JCGE: Esto es para encontrar mas facil el error
+			String sqlState = e.getSQLState();
+			JOptionPane.showMessageDialog(null,"Error " + sqlState + ": " + mensaje);
+			e.printStackTrace();
+		}
+		return info;
+	}
 	public static String estatusHabitacion(int p_idhabitacion, String p_fecha)
 	{
 		String estatus = "";

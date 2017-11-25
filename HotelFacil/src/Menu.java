@@ -1,4 +1,5 @@
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -20,19 +21,37 @@ public class Menu extends MainWindow implements ActionListener, ListSelectionLis
 	 * */
 	public JToolBar toolBar;
 	public ArrayList<JButton> botonera;
+	public habitacionesGrid hg;
 	//JCGE: Constructor del menu
 	Menu()
 	{
 		//JCGE: Propiedades Generales
+		panelCentro.setLayout(null);
+		this.setExtendedState(NORMAL);
 		this.setTitle("Principal");                                   //Nombre de la ventana
 		checkPermisos();                                              //Revisamos los permisos del usuario
 		panelCentro.setLayout(null);                                  //Sin layout para poner los widgets
 		botonera = new ArrayList<JButton>();                          //Iniciamos los botones de los modulos
 		toolBar = new JToolBar(null, JToolBar.HORIZONTAL);            //Iniciamos el toolbar
-		toolBar.setVisible(true);
+		toolBar.setVisible(false);
 		toolBar.setBounds(0,0,MainWindow.WIDTH.intValue(),40);
 		panelCentro.add(toolBar);
 		l_titulo.setText("Usuario: " + baseDatos.user_actual);    //Le cambiamos el usuario que esta usando el sistema
+		hg = new habitacionesGrid();
+		newMenuInterno(hg);
+		hg.setMaximizable(false);
+		try {
+			hg.setMaximum(true);
+		} catch (PropertyVetoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			hg.setSelected(true);
+		} catch (PropertyVetoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	//JCGE: Tenemos una botonera para todos los modulos
 	//Los botones dependen del modulo, entonces pueden ser N botones

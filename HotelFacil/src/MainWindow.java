@@ -7,12 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -33,9 +36,11 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	static final Double WIDTH = new Double(screenSize.getWidth());
 	static final Double HEIGHT = new Double(screenSize.getHeight());
-	
+	public static int x_int = 50;
+	public static int y_int = 50;
 	public Container frame;
-	public JPanel panelNorte, panelEste, panelOeste, panelSur, panelCentro;
+	public JPanel panelNorte, panelEste, panelOeste, panelSur;
+	public static JDesktopPane panelCentro;
 	public HFLabel l_titulo, elTiempo;
 	public JMenuBar menuBar;
 	
@@ -51,17 +56,17 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		frame.setLayout(new BorderLayout());
 		//JCGE: Preparamos la ventana
 		this.setTitle("Main Window");
-		this.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-200);
+		//this.setSize(MainWindow.WIDTH.intValue(), MainWindow.HEIGHT.intValue());
 		//this.setSize(800, 599);
+		this.setExtendedState(NORMAL);
 		this.setResizable(false);
-		//this.setExtendedState(MAXIMIZED_BOTH);
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		//JCGE: Preparamos las areas de trabajo de las ventanas
 		panelSur   = new JPanel();
-		panelCentro = new JPanel();
+		panelCentro = new JDesktopPane();
 		panelCentro.setLayout(null);
 		//JCGE: Basicamente esto es para identificar las cajas...
 		//posiblemente el sistema en general lo ponemos amarillo claro
@@ -91,31 +96,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		}
 		
 		menuItems = new ArrayList<JMenuItem>();
-		/*
-		menuItems.add(new JMenuItem("Usuarios"));
-		menuItems.add(new JMenuItem("Reportes del Gerente"));
-		menuItems.add(new JMenuItem("Habitaciones"));
-		menuItems.get(0).addActionListener(this);
-		menuItems.get(1).addActionListener(this);
-		menuItems.get(2).addActionListener(this);
-		menuz.get(0).add(menuItems.get(0));
-		menuz.get(0).add(menuItems.get(1));
-		menuz.get(0).add(menuItems.get(2));
 		
-		menuItems.add(new JMenuItem("Nuevo Cuarto"));
-		menuItems.add(new JMenuItem("CheckOut"));
-		menuItems.add(new JMenuItem("Alta de Huespedes"));
-		menuItems.get(3).addActionListener(this);
-		menuItems.get(4).addActionListener(this);
-		menuItems.get(5).addActionListener(this);
-		menuz.get(1).add(menuItems.get(3));
-		menuz.get(1).add(menuItems.get(4));
-		menuz.get(1).add(menuItems.get(5));
-		
-		menuItems.add(new JMenuItem("Mi Cuenta"));
-		menuItems.get(menuItems.size()-1).addActionListener(this);
-		menuz.get(2).add(menuItems.get(menuItems.size()-1));
-		*/
 		menuItems.add(new JMenuItem("Usuarios"));
 		menuItems.get(menuItems.size()-1).addActionListener(this);
 		menuz.get(0).add(menuItems.get(menuItems.size()-1));
@@ -157,8 +138,29 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		frame.add(menuBar, BorderLayout.NORTH);
 		frame.add(panelSur,   BorderLayout.SOUTH);
 		frame.add(panelCentro, BorderLayout.CENTER);
-		this.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-201);
 		this.setLocationRelativeTo(null);
+		pack();
+	}
+	public static void newMenuInterno(MenuInterno e)
+	{
+		panelCentro.add(e);
+		e.setLocation(x_int, y_int);
+		if (x_int > 200)
+		{
+			x_int=50; y_int=50;
+		}
+		x_int+=30; y_int+=30;
+		e.moveToFront();
+		try {
+			e.setSelected(true);
+		} catch (PropertyVetoException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	public void setWindowSize(MainWindow e, int x, int y)
+	{
+		e.setSize(MainWindow.WIDTH.intValue()-x, MainWindow.HEIGHT.intValue()-y);
 	}
 	public void checkPermisos()
 	{
@@ -228,6 +230,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana.dispose();
 			Principal.ventana = new Login();
 			Principal.ventana.finGUI();
+			Principal.ventana.setWindowSize(Principal.ventana, 40, 40);
 			//System.out.println("Este men se quiere salir");
 		}
 		if (boton == "Usuarios")
@@ -237,57 +240,8 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 			Principal.ventana.dispose();
 			Principal.ventana = new Usuarios();
 			Principal.ventana.finGUI();
+			Principal.ventana.setWindowSize(Principal.ventana, 100, 100);
 			Usuarios.textos.get(0).requestFocus();
-		}
-		if (boton == "Nuevo Cuarto")
-		{
-			//JCGE: 
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new NuevoCuarto();
-			Principal.ventana.finGUI();
-		}
-		if (boton == "CheckOut")
-		{
-			//JCGE: 
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new Checkout();
-			Principal.ventana.finGUI();
-		}
-		if (boton == "Reportes del Gerente")
-		{
-			//JCGE: 
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new reportesGerente();
-			Principal.ventana.finGUI();
-		}
-		if (boton == "Mi Cuenta")
-		{
-			//JCGE: 
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new miCuenta();
-			Principal.ventana.finGUI();
-		}
-		if (boton == "Habitaciones")
-		{
-			//JCGE: 
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new Habitaciones();
-			Principal.ventana.finGUI();
-			Habitaciones.idhabitacion.requestFocus();
-		}
-		if (boton == "Alta de Huespedes")
-		{
-			//JCGE: 
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new altaHuespedes();
-			Principal.ventana.finGUI();
-			altaHuespedes.idhuesped.requestFocus();
 		}
 	}
 	@Override

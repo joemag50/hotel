@@ -183,7 +183,7 @@ CREATE OR REPLACE FUNCTION hotel_hospedaje_actual_info (p_idhabitacion INTEGER)
   RETURNS TEXT AS $$
 DECLARE
   --Variables
-  regreso TEXT := 'X';
+  regreso TEXT := 'Sin Información';
   r       RECORD;
 BEGIN
   --JCGE: De jodido que exista la habitacion

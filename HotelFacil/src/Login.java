@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +33,7 @@ public class Login extends MainWindow
 		//JCGE: Propiedades Generales
 		menuBar.setVisible(false);
 		baseDatos.user_actual = null; //JCGE: Cuando instanciamos el Login aun no sabemos el user
+		this.setExtendedState(MAXIMIZED_BOTH);
 		
 		//JCGE: Propiedades Particulares
 		user = new JTextField(50);
@@ -102,8 +104,9 @@ public class Login extends MainWindow
 			baseDatos.user_actual = user.getText();
 			Principal.ventana.setVisible(false);
 			Principal.ventana.dispose();
-			Principal.ventana = new habitacionesGrid();
+			Principal.ventana = new Menu();
 			Principal.ventana.finGUI();
+			Principal.ventana.setWindowSize(Principal.ventana, 40, 40);
 		}
 	}
 	public Boolean validaLogin()
