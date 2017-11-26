@@ -68,7 +68,8 @@ CREATE TABLE habitaciones (idhabitacion  SERIAL PRIMARY KEY,
                            edificio      TEXT,
                            numero_fisico TEXT,
                            tabulacion    NUMERIC, --Cuanto va a multiplicarse la habitacion
-                           descripcion   TEXT);
+                           descripcion   TEXT,
+                           limpiar       BOOLEAN);
 
 -- -------------------------------------------------------------
 -- JCGE: Esta tabla 

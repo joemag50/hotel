@@ -21,7 +21,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 	private int idhue = 0;
 	private int idsol = 0;
 	private HFLabel total;
-	private HFDoubleField mTotal, cambio;
+	private HFDoubleField mTotal, cambio, pendiente;
 	Checkout(String p_fecha)
 	{
 		this.setTitle("Checkout");
@@ -96,12 +96,19 @@ public class Checkout extends NuevoCuarto implements ActionListener
 		int x = 420, y = 30, width = 200, height = 35;
 		lcob.setBounds(x, y, width, height); y+=35;
 		scroll.setBounds(x, y, 500, 200); y+=200;
-		HFLabel ltotal = new HFLabel(" Total: ");
+		HFLabel ltotal = new HFLabel("    Total: ");
 		ltotal.setBounds(x, y, width, height);
 		total  = new HFLabel(sumaCobros()+"");
 		total.setBounds(x+ 200, y, width, height); y+=35;
 		
-		HFLabel lmtotal = new HFLabel(" Abono: ");
+		HFLabel lpendiente = new HFLabel("Pendiente: ");
+		lpendiente.setBounds(x, y, width, height);
+		pendiente = new HFDoubleField();
+		pendiente.setBounds(x +200, y, width, height); y+=35;
+		pendiente.setEnabled(false);
+		pendiente.setText(""+(sumaCobros()-sumaAbonos()));
+		
+		HFLabel lmtotal = new HFLabel("    Abono: ");
 		lmtotal.setBounds(x, y, width, height);
 		mTotal = new HFDoubleField();
 		mTotal.setBounds(x+ 200, y, width, height); y+=35;
@@ -111,22 +118,35 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			public void focusLost(FocusEvent arg0)
 			{
 				//JCGE:
-				Double c = new Double(Double.parseDouble(total.getText()) - Double.parseDouble(mTotal.getText()));
+				Double c = new Double(Double.parseDouble(mTotal.getText()) - Double.parseDouble(total.getText()));
+				if (c < 0)
+				{
+					c = 0.0;
+				}
 				cambio.setValue(c);
+				guardar.setEnabled(true);
 			}
 			@Override
-			public void focusGained(FocusEvent arg0) {/*JCGE: Sin acciones*/}
+			public void focusGained(FocusEvent arg0)
+			{
+				//JCGE: Cuando el usuario quiera modificar esta entrada
+				//Bloqueamos el boton guardar
+				guardar.setEnabled(false);
+			}
 		});
 		
-		HFLabel lcambio = new HFLabel("Cambio: ");
+		HFLabel lcambio = new HFLabel("   Cambio: ");
 		lcambio.setBounds(x, y, width, height);
 		cambio = new HFDoubleField();
 		cambio.setBounds(x+ 200, y, width, height);
 		cambio.setEnabled(false);
-		y+=70;
+		y+=40;
 		guardar.setBounds(x, y, width, height);
+		guardar.setEnabled(false);
 		cancelar.setBounds(x + width, y, width, height);
 		
+		panelInterno.add(pendiente);
+		panelInterno.add(lpendiente);
 		panelInterno.add(lcambio);
 		panelInterno.add(cambio);
 		panelInterno.add(ltotal);
@@ -136,6 +156,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 	}
 	private void cobrosActuales()
 	{
+		System.out.println(""+idsol);
 		ResultSet k = baseDatos.db.newQuery(String.format(" SELECT * "
 														+ "   FROM pagos "
 														+ "  WHERE idsolicitud = %s ",idsol));
@@ -143,13 +164,29 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			while (k.next())
 			{
 				System.out.println(k.getString("concepto"));
-				Object[] concepto = {k.getString("concepto"), k.getInt("cantidad"), k.getDouble("precio_unitario"), k.getDouble("cargo")};
+				Object[] concepto = {k.getString("concepto"), k.getInt("cantidad"), k.getDouble("precio_unitario"), k.getDouble("cargo"), k.getDouble("abono")};
 				nuevoCobro(concepto);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	private Double sumaAbonos()
+	{
+		Double suma = 0.0;
+		String query = String.format(" SELECT sum(abono) FROM pagos WHERE idsolicitud = %s ", idsol);
+		ResultSet r = baseDatos.db.newQuery(query);
+		try {
+			if (r.next())
+			{
+				suma = r.getDouble(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return suma;
 	}
 	private Double sumaCobros()
 	{
@@ -175,12 +212,64 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			{
 				return;
 			}
-			String query = String.format(" UPDATE pagos SET abono = cargo WHERE idsolicitud = %s ", idsol);
-			int res = baseDatos.db.newInsert(query);
-			
-			String query2 = String.format(" UPDATE hospedajes SET estatus = 2 WHERE idsolicitud = %s ", idsol);
-			int res2 = baseDatos.db.newInsert(query2);
-			
+			//JCGE: Buscamos los pagos que tiene que hacer
+			ArrayList<Integer> idpagos       = new ArrayList<Integer>();
+			ArrayList<Double>  pagoNecesario = new ArrayList<Double>();
+			String query = String.format(" SELECT idpago,cargo-abono "
+									   + "   FROM pagos"
+									   + "  WHERE idsolicitud = %s AND abono <> cargo"
+									   + "  ORDER BY concepto", idsol);
+			ResultSet r = baseDatos.db.newQuery(query);
+			try {
+				int i = 0;
+				while (r.next())
+				{
+					idpagos.add(r.getInt(1));
+					pagoNecesario.add(r.getDouble(2)); 
+					i++;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Double pago = new Double(mTotal.getText()) ;
+			for (int i = 0; i<idpagos.size(); i++)
+			{
+				if (pago == 0)
+				{
+					break;
+				}
+				if (pago < pagoNecesario.get(i))
+				{
+					query = String.format(" UPDATE pagos SET abono = abono + %s WHERE idsolicitud = %s AND idpago = %s ", pago, idsol, idpagos.get(i));
+					int res = baseDatos.db.newInsert(query);
+					System.out.println("1 "+res);
+					pago = 0.0;
+				}
+				else
+				{
+					pago-=(pagoNecesario.get(i));
+					query = String.format(" UPDATE pagos SET abono = abono + %s WHERE idsolicitud = %s AND idpago = %s ", pagoNecesario.get(i), idsol, idpagos.get(i));
+					int res = baseDatos.db.newInsert(query);
+					System.out.println("2 "+res);
+				}
+			}
+			//JCGE: Vamos a consultar si la suma de los abonos coincide con la suma de los cargos
+			query = String.format(" SELECT sum(abono) = sum(cargo) FROM pagos WHERE idsolicitud = %s ", idsol);
+			r = baseDatos.db.newQuery(query);
+			try {
+				if (r.next())
+				{
+					if (r.getBoolean(1))
+					{
+						String query2 = String.format(" UPDATE hospedajes SET estatus = 2 WHERE idsolicitud = %s ", idsol);
+						int res2 = baseDatos.db.newInsert(query2);
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			limpiarEntradas();
 			estatusHabitacion.actualizaAgenda();
 			this.setVisible(false);

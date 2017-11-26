@@ -55,13 +55,13 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 			 								   "        Telefono: ",
 			 								   "         Tarjeta: ",
 											   "   Num Seguridad: "};
-	protected String[] columnas = {"Concepto","Cantidad", "P. Unitario","Total"};
+	protected String[] columnas = {"Concepto","Cantidad", "P. Unitario","Total","Abonado"};
 	//JCGE: Da la tremenda casualidad que soy el que decide que cobros poner
 	protected static Object[][] data;
 	protected static JTable tabla;
 	NuevoCuarto()
 	{
-		data = new Object[][] {{"Dias", 0.0, 0.0, 0.0},{"Huespedes", 0.0, 0.0, 0.0}};
+		data = new Object[][] {{"Dias", 0.0, 0.0, 0.0,0.0},{"Huespedes", 0.0, 0.0, 0.0,0.0}};
 		//JCGE: Propiedades de la ventana
 		this.setTitle("Nueva Reservación");
 		//this.setExtendedState(NORMAL);
@@ -275,6 +275,7 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 					tabla.getModel().setValueAt(e[1], i, 1);
 					tabla.getModel().setValueAt(e[2], i, 2);
 					tabla.getModel().setValueAt(e[3], i, 3);
+					tabla.getModel().setValueAt(e[4], i, 4);
 				}
 	        }
 		}
@@ -299,7 +300,7 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 						s = baseDatos.db.newQuery(String.format(" SELECT tabulacion FROM habitaciones WHERE idhabitacion = %s ", estatusHabitacion.idhabitacion));
 						if (s.next())
 						{
-							nuevoCobro(new Object[] {"Dias", new Integer(dias), new Double(s.getDouble(1)), new Double(s.getDouble(1)*dias)});
+							nuevoCobro(new Object[] {"Dias", new Integer(dias), new Double(s.getDouble(1)), new Double(s.getDouble(1)*dias), 0.0});
 						}
 					}
 				}
@@ -309,7 +310,7 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 			et.printStackTrace();
 			return;
 		}
-		Object[] concepto = {"Huespedes", new Integer(huespedes.getText()), new Double(500), new Double(500 * Integer.parseInt(huespedes.getText()))};
+		Object[] concepto = {"Huespedes", new Integer(huespedes.getText()), new Double(500), new Double(500 * Integer.parseInt(huespedes.getText())), 0.0};
 		nuevoCobro(concepto);
 	}
 	//JCGE: 

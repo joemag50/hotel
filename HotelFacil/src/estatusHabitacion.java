@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -34,6 +36,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 	private HFLabel mes;
 	protected static int MESActual = Integer.parseInt(HFDateField.mes.format(HFDateField.DateActual));
 	protected static int ANActual = Integer.parseInt(HFDateField.ejercicio.format(HFDateField.DateActual));
+	int habitacionDiaHoy = 0;
 	estatusHabitacion(String habitacion)
 	{
 		//JCGE: Tenemos el numero de habitacion
@@ -146,6 +149,11 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			else
 			{
 				descrip.get(descrip.size()-1).setBackground(Color.YELLOW);
+			}
+			//JCGE: Cuando coincida con la fecha de hoy
+			if (Objects.equals(new String(fecha), new String("'"+HFDateField.FechaActual+"'")))
+			{
+				habitacionDiaHoy = descrip.size()-1;
 			}
 			dias.add(nuevoDia(etiquetas.get(etiquetas.size()-1),
 											descrip.get(descrip.size()-1)));
@@ -294,10 +302,22 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		}
 		if (boton == "Enviar Limpieza")
 		{
+			String query = String.format(" UPDATE habitaciones SET limpiar = TRUE"
+									   + "  WHERE idhabitacion = %s ", idhabitacion);
+			int res = baseDatos.db.newInsert(query);
+			habitacionesGrid.actualizaGrid();
+			this.setVisible(false);
+			this.dispose();
 			return;
 		}
 		if (boton == "Limpieza Terminada")
 		{
+			String query = String.format(" UPDATE habitaciones SET limpiar = FALSE"
+					   				   + "  WHERE idhabitacion = %s ", idhabitacion);
+			int res = baseDatos.db.newInsert(query);
+			habitacionesGrid.actualizaGrid();
+			this.setVisible(false);
+			this.dispose();
 			return;
 		}
 		if (boton == "Cancelar")
