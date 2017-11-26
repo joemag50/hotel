@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -48,6 +49,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	public ArrayList<JMenuItem> menuItems;
 	//public String[] nombres_menu = {"Administración","Operación","Mi Cuenta"};
 	public String[] nombres_menu = {"Administración","Mi Cuenta"};
+	public static ArrayList<Color> colores;
 	//JCGE: Constructor aca mamalon
 	MainWindow ()
 	{
@@ -72,7 +74,15 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		//posiblemente el sistema en general lo ponemos amarillo claro
 		//para que no dañe la vista
 		//panelCentro.setBackground(Color.getHSBColor(210, 72, 100));
-		panelCentro.setBackground(Color.LIGHT_GRAY);
+		
+		colores = new ArrayList<Color>();
+		colores.add(new Color(224,238,254));
+		colores.add(new Color(196,223,248));
+		colores.add(new Color(166,204,245));
+		colores.add(new Color(186,205,238));
+		colores.add(new Color(140,176,236));
+		
+		panelCentro.setBackground(colores.get(2));
 		//JCGE: Estas instancias las usamos para ver la fecha
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
 		Calendar currentCalendar = Calendar.getInstance();
@@ -145,7 +155,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	{
 		panelCentro.add(e);
 		e.setLocation(x_int, y_int);
-		if (x_int > 200)
+		if (x_int > 100)
 		{
 			x_int=50; y_int=50;
 		}
@@ -164,13 +174,11 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	}
 	public void checkPermisos()
 	{
-		for (int i = 0;i <= nombres_menu.length-1; i++)
+		if (Objects.equals(baseDatos.nivelUsuario(), new String("ADM")))
 		{
-			if (true)
-			{
-				menuz.get(i).setEnabled(true);	
-			}
+			menuz.get(0).setEnabled(true);
 		}
+		menuz.get(1).setEnabled(true);
 	}
 	protected KeyAdapter solonum = new KeyAdapter()
 	{
@@ -221,7 +229,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 	public void actionPerformed(ActionEvent arg0)
 	{
 		String boton = arg0.getActionCommand();
-		System.out.println(boton);
+		//System.out.println(boton);
 		if (boton == "Salir")
 		{
 			//JCGE:

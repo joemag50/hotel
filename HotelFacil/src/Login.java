@@ -62,9 +62,10 @@ public class Login extends MainWindow
 			System.out.println(e.getMessage());
 		}
 		JLabel picLabel = new JLabel(new ImageIcon(img));
-		picLabel.setBounds(x - 200, y - 300, b * 2, h * 2);
+		picLabel.setBounds((WIDTH.intValue()/2)-(b), y - 300, b * 2, h * 2);
 		panelCentro.add(picLabel);
-		loginBox.setBounds(x,y,b,h+20);
+		loginBox.setBounds((WIDTH.intValue()/2)-260,y,b,h+20);
+		loginBox.setBackground(colores.get(4));
 		panelCentro.add(loginBox);
 	}
 	//JCGE: Este es el metodo que se encarga de tomar las acciones en los botones

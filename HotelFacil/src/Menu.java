@@ -71,5 +71,5 @@ public class Menu extends MainWindow implements ActionListener, ListSelectionLis
 		}
 	}
 	@Override
-	public void valueChanged(ListSelectionEvent arg0){/*JCGE: Sin acciones*/}
+	public void valueChanged(ListSelectionEvent arg0) {/*JCGE: Sin acciones*/}
 }

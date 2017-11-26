@@ -166,7 +166,8 @@ BEGIN
   PERFORM *
     FROM hospedajes
    WHERE idhabitacion = p_idhabitacion AND 
-         (p_fecha BETWEEN fecha_inicio AND fecha_fin);
+         (p_fecha BETWEEN fecha_inicio AND fecha_fin) AND 
+         estatus <= 1;
   IF FOUND THEN
     RETURN arr[2];
   END IF;
@@ -179,7 +180,7 @@ LANGUAGE plpgsql;
 --------------------------
 -- JCGE: Funcion para regresar el estatus de una habitacion
 --------------------------
-CREATE OR REPLACE FUNCTION hotel_hospedaje_actual_info (p_idhabitacion INTEGER)
+CREATE OR REPLACE FUNCTION hotel_hospedaje_info (p_idhabitacion INTEGER, p_fecha DATE)
   RETURNS TEXT AS $$
 DECLARE
   --Variables
@@ -191,19 +192,61 @@ BEGIN
   IF (NOT FOUND) THEN
     RETURN regreso;
   END IF;
+  p_fecha := COALESCE(p_fecha,now()::DATE);
   --JCGE: Buscamos quien actualmente la esta ocupando
   SELECT INTO r paterno||' '||materno||' '||nombre AS nombre_completo,
                 fecha_inicio, fecha_fin
     FROM hospedajes
     LEFT JOIN huespedes USING (idhuesped)
    WHERE idhabitacion = p_idhabitacion AND 
-         (now()::DATE BETWEEN fecha_inicio AND fecha_fin);
+         (p_fecha BETWEEN fecha_inicio AND fecha_fin) AND 
+         estatus <= 1;
   IF FOUND THEN
-    regreso := format(E'Titular: %s %s %s \n'|+
-                      E' Inicio: %s Final: %s',r.nombre_completo,r.fecha_inicio, r.fecha_fin);
+    regreso := format(E'Titular: %s \nInicio: %s Final: %s',r.nombre_completo,r.fecha_inicio, r.fecha_fin);
   END IF;
   --JCGE: Significa que no encontro ninguna reservacion
   RETURN regreso;
 END;$$
 LANGUAGE plpgsql;
 
+
+--------------------------
+-- JCGE: Funcion para saber si esta disponible un rango de fechas y en cierta habitacion
+--------------------------
+CREATE OR REPLACE FUNCTION hotel_habitacion_estatus_rango (p_idhabitacion INTEGER, p_fecha_ini DATE, p_fecha_fin DATE)
+  RETURNS TEXT AS $$
+DECLARE
+  --Variables
+  arr     TEXT[] := ARRAY['Libre', 'Ocupada: ', 'Error: '];
+  r       RECORD;
+  dias    INTEGER := (p_fecha_fin - p_fecha_ini);
+  p_fecha DATE;
+BEGIN
+  --JCGE: De jodido que exista la habitacion
+  PERFORM * FROM habitaciones WHERE idhabitacion = p_idhabitacion;
+  IF (NOT FOUND) THEN
+    RETURN arr[3]::TEXT |+ 'No existe la habitación.'::TEXT;
+  END IF;
+  --JCGE: Buscamos en cada fecha para saber si esta siendo ocupada para la misma habitacion
+  p_fecha := p_fecha_ini;
+  FOR i IN 0..COALESCE(dias,0) LOOP
+      --JCGE: Si es un dia que ya paso
+    IF (p_fecha < now()::DATE) THEN
+      RETURN arr[3]::TEXT |+ 'Día transcurrido.'::TEXT;
+    END IF;
+    FOR r IN SELECT *
+               FROM hospedajes
+              WHERE idhabitacion = p_idhabitacion AND 
+                    (p_fecha BETWEEN fecha_inicio AND fecha_fin) AND
+         estatus <= 1 LOOP
+      arr[2] := arr[2]::TEXT || ': '::TEXT || (p_fecha)::TEXT;
+    END LOOP;
+    p_fecha := p_fecha_ini + i;
+  END LOOP;
+  IF (arr[2] <> 'Ocupada: ') THEN
+    RETURN arr[2];
+  END IF;
+  --JCGE: Significa que no encontro ninguna reservacion
+  RETURN arr[1];
+END;$$
+LANGUAGE plpgsql;

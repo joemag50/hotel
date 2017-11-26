@@ -20,7 +20,7 @@ public class MenuInterno extends JInternalFrame
 	protected int ext_h = MainWindow.HEIGHT.intValue()-200;
 	MenuInterno()
 	{
-		super("MenuInterno", false, true, true, true);
+		super("MenuInterno", false, true, false, true);
 		this.setSize(ext_b, ext_h);
 		this.setVisible(true);
 		this.setLayout(null);
@@ -28,6 +28,8 @@ public class MenuInterno extends JInternalFrame
 		panelInterno.setLayout(null);
 		panelInterno.setVisible(true);
 		panelInterno.setBounds(0, 0, ext_b, ext_h);
+		panelInterno.setBackground(MainWindow.colores.get(2));
+		this.setBackground(MainWindow.colores.get(2));
 		this.add(panelInterno);
 		this.moveToFront();
 		try {

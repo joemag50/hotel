@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,14 +22,18 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 	private HFTextField        estatus;
 	private JTextArea          desc;
 	private ArrayList<JButton> botones;
-	private ArrayList<HFLabel> etiquetas;
-	private ArrayList<JTextArea> descrip;
+	private static ArrayList<HFLabel> etiquetas;
+	private static ArrayList<JButton> descrip;
 	private JPanel             agenda;
 	private ArrayList<JPanel>  dias;
 	public static int idhabitacion;
-	private Font bigFont = new Font("Ubuntu Mono", Font.BOLD, 18);
+	static Font bigFont = new Font("Ubuntu Mono", Font.BOLD, 18);
 	public MainWindow NuevoCuarto;
 	public Checkout Checkout;
+	private JButton siguiente, anterior;
+	private HFLabel mes;
+	protected static int MESActual = Integer.parseInt(HFDateField.mes.format(HFDateField.DateActual));
+	protected static int ANActual = Integer.parseInt(HFDateField.ejercicio.format(HFDateField.DateActual));
 	estatusHabitacion(String habitacion)
 	{
 		//JCGE: Tenemos el numero de habitacion
@@ -46,7 +51,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		//rellenaToolBar(nombres, this);
 		
 		//JCGE: Propiedades adentro de la ventana
-		int x = 30, y = 80, width = 300, height = 30;
+		int x = 30, y = 30, width = 300, height = 30;
 		
 		//JCGE: Numero de la habitacion
 		HFLabel habi = new HFLabel("Habitación: "+idhabitacion);
@@ -65,15 +70,14 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		y+=35;
 		desc = new JTextArea();
 		desc.setBounds(x, y, width, 130);
-		desc.setText(baseDatos.masInfoHabitacion(idhabitacion));
 		y+=150;
 		
 		//JCGE: Botones
 		botones = new ArrayList<JButton>();
 		botones.add(new JButton("Crear Reservación"));
-		botones.add(new JButton("Check Out"));
 		botones.add(new JButton("Enviar Limpieza"));
 		botones.add(new JButton("Limpieza Terminada"));
+		botones.add(new JButton("Cancelar"));
 		for (JButton bt: botones)
 		{
 			bt.setBounds(x, y, width, 50);
@@ -82,11 +86,22 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			panelInterno.add(bt);
 			y+=60;
 		}
+		botones.get(botones.size()-1).setBackground(Color.RED);
 		
 		//JCGE: Agenda mamalona
-		HFLabel lAgenda = new HFLabel("Agenda");
-		x+=400; y = 80;
-		lAgenda.setBounds(x, y, width, height); y+=35;
+		siguiente = new JButton("Siguiente");
+		anterior  = new JButton("Anterior");
+		
+		HFLabel lAgenda = new HFLabel("Agenda de: ");
+		mes       = new HFLabel(HFDateField.meseseses[MESActual-1]+" "+ANActual);
+		x+=400; y = 30;
+		lAgenda.setBounds(x, y, width, height);
+		mes.setBounds(x + 100, y, width, height);
+		siguiente.setBounds(x + 500, y, 100, height);
+		anterior.setBounds(x+ 300, y, 100, height);
+		siguiente.addActionListener(this);
+		anterior.addActionListener(this);
+		y+=35;
 		lAgenda.setFont(bigFont);
 		agenda = new JPanel();
 		agenda.setLayout(new GridLayout(5,5));
@@ -94,27 +109,32 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		agenda.setBounds(x, y, 700, 500);
 		
 		etiquetas = new ArrayList<HFLabel>();
-		descrip = new ArrayList<JTextArea>();
+		descrip = new ArrayList<JButton>();
 		dias = new ArrayList<JPanel>();
-		for (int i = 0; i <= 30; i++)
+		
+		int dia = 0,
+				mez = MESActual,
+				ejercicio = ANActual;
+		for (int i = 0; i <= 34; i++)
 		{
+			dia++;
 			//JCGE: Metemos lo necesario en cada dia de la agenda
-			int dia = (i+1),
-				mes = Integer.parseInt(HFDateField.mes.format(HFDateField.DateActual)),
-				ejercicio = Integer.parseInt(HFDateField.ejercicio.format(HFDateField.DateActual));
-			if (dia == HFDateField.ducm[mes-1])
-			{
-				dia = 1; mes += 1;
-				if ((mes-1) == 12)
+				if ((dia-1 == HFDateField.ducm[mez-1]) || (dia == 30 && mez == 2 && ejercicio % 4 == 0) || (dia == 29 && mez == 2 && ejercicio % 4 != 0))
 				{
-					ejercicio++;
+					dia = 1; mez += 1;
+					if ((mez) == 13)
+					{
+						mez = 1;
+						dia = 1;
+						ejercicio++;
+					}
 				}
-			}
 			etiquetas.add(new HFLabel(""+dia));
-			descrip.add(new JTextArea());
-			String fecha = String.format("'%s/%s/%s'", dia, mes, ejercicio);
+			descrip.add(new JButton());
+			String fecha = String.format("'%s/%s/%s'", dia, mez, ejercicio);
 			String estatus = baseDatos.estatusHabitacion(idhabitacion, fecha);
 			descrip.get(descrip.size()-1).setText(estatus);
+			descrip.get(descrip.size()-1).setActionCommand(fecha);
 			if (Objects.equals(estatus, new String("Ocupada")))
 			{
 				descrip.get(descrip.size()-1).setBackground(Color.RED);
@@ -132,6 +152,9 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			agenda.add(dias.get(dias.size()-1));
 		}
 		
+		panelInterno.add(siguiente);
+		panelInterno.add(anterior);
+		panelInterno.add(mes);
 		panelInterno.add(lAgenda);
 		panelInterno.add(habi);
 		panelInterno.add(agenda);
@@ -142,6 +165,45 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		//JCGE: bloqueamos o mostramos dependiendo el permiso
 		permisos();
 		estatus.setText(baseDatos.estatusHabitacion(idhabitacion, "now()"));
+		desc.setText(baseDatos.masInfoHabitacion(idhabitacion, "now()"));
+	}
+	public static void actualizaAgenda()
+	{
+		int dia = 0,
+				mez = MESActual,
+				ejercicio = ANActual;
+		for (int i = 0; i <= 34; i++)
+		{
+			dia++;
+			//JCGE: Metemos lo necesario en cada dia de la agenda
+				if ((dia-1 == HFDateField.ducm[mez-1] && mez !=2 ) || (dia == 30 && mez == 2 && ejercicio % 4 == 0) || (dia == 29 && mez == 2 && ejercicio % 4 != 0))
+				{
+					dia = 1; mez += 1;
+					if ((mez) == 13)
+					{
+						mez=1;
+						dia=1;
+						ejercicio++;
+					}
+				}
+			String fecha = String.format("'%s/%s/%s'", dia, mez, ejercicio);
+			String estatus = baseDatos.estatusHabitacion(idhabitacion, fecha);
+			etiquetas.get(i).setText(""+dia);
+			descrip.get(i).setText(estatus);
+			descrip.get(i).setActionCommand(fecha);
+			if (Objects.equals(estatus, new String("Ocupada")))
+			{
+				descrip.get(i).setBackground(Color.RED);
+			}
+			else if (Objects.equals(estatus, new String("Libre")))
+			{
+				descrip.get(i).setBackground(Color.GREEN);
+			}
+			else
+			{
+				descrip.get(i).setBackground(Color.YELLOW);
+			}
+		}
 	}
 	public void permisos()
 	{
@@ -182,10 +244,11 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			botones.get(3).setEnabled(false);
 		}
 	}
-	public JPanel nuevoDia(HFLabel eti, JTextArea des)
+	public JPanel nuevoDia(HFLabel eti, JButton des)
 	{
 		JPanel panelsito = new JPanel();
-		des.setSize(10, 10);
+		des.addActionListener(this);
+		des.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		panelsito.setLayout(new BoxLayout(panelsito, BoxLayout.Y_AXIS));
 		panelsito.setVisible(true);
 		panelsito.add(eti);
@@ -200,27 +263,59 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		System.out.println(boton);
 		if (boton == "Crear Reservación")
 		{
-			MainWindow.newMenuInterno(new NuevoCuarto());
+			NuevoCuarto nc = new NuevoCuarto();
+			MainWindow.newMenuInterno(nc);
+			nc.setSize(1170, 500);
+			return;
 		}
-		if (boton == "Check Out")
+		if (boton == "Siguiente")
 		{
-			Checkout = new Checkout();
-			Checkout.finGUI();
-			Checkout.setWindowSize(Checkout, 399, 199);
+			MESActual++;
+			if (MESActual == 13)
+			{
+				MESActual = 1;
+				ANActual++;
+			}
+			mes.setText(HFDateField.meseseses[MESActual-1]+" "+ANActual);
+			actualizaAgenda();
+			return;
+		}
+		if (boton == "Anterior")
+		{
+			MESActual--;
+			if (MESActual == 0)
+			{
+				MESActual = 12;
+				ANActual--;
+			}
+			mes.setText(HFDateField.meseseses[MESActual-1]+" "+ANActual);
+			actualizaAgenda();
+			return;
 		}
 		if (boton == "Enviar Limpieza")
 		{
-			
+			return;
 		}
 		if (boton == "Limpieza Terminada")
 		{
-			
+			return;
 		}
-		if (boton == "Salir")
+		if (boton == "Cancelar")
 		{
 			//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");
 			this.setVisible(false);
 			this.dispose();
-		}		
+			return;
+		}
+		desc.setText(baseDatos.masInfoHabitacion(idhabitacion, boton));
+		estatus.setText(baseDatos.estatusHabitacion(idhabitacion, boton));
+		if (Objects.equals(estatus.getText(), new String("Ocupada")))
+		{
+			Checkout co = new Checkout(boton); //JCGE: en boton tenemos una fecha
+			MainWindow.newMenuInterno(co);
+			co.setSize(950, 500);
+			return;
+		}
+		return;
 	}
 }

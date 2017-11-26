@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +30,7 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
 		
 		//JCGE: Propiedades especificas
 		JPanel p = new JPanel(new GridLayout(3, 3));
+		p.setBackground(Color.WHITE);
 		botones = new ArrayList<JButton>();
 		
 		int j = 1;
@@ -55,7 +57,7 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
             }
         }
         p.setVisible(true);
-        p.setBounds(150,150,800,400);
+        p.setBounds(200,100, 1000,600);
         panelInterno.add(p);
 	}
 	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
@@ -65,7 +67,7 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
 		public void actionPerformed(ActionEvent arg0)
 		{
 			String boton = arg0.getActionCommand();
-			System.out.println(boton);
+			//System.out.println(boton);
 			//JCGE: Cuando de click siempre va a mostrar
 			MainWindow.newMenuInterno(new estatusHabitacion(boton));
 			//estHab.finGUI();

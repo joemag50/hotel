@@ -54,15 +54,15 @@ public class baseDatos
 			e.printStackTrace();
 		}
 	}
-	public static String masInfoHabitacion(int p_idhabitacion)
+	public static String masInfoHabitacion(int p_idhabitacion, String p_fecha)
 	{
 		String info = "";
 		try
 		{
-			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_hospedaje_actual_info(%s)", p_idhabitacion));
+			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_hospedaje_info(%s, %s::DATE)", p_idhabitacion, p_fecha));
 			if (res.next())
 			{
-				System.out.println(res.getString(1));
+				//System.out.println(res.getString(1));
 				if (res.getString(1) != null)
 				{
 					info = res.getString(1);
@@ -87,7 +87,7 @@ public class baseDatos
 			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_habitacion_estatus(%s, %s::DATE)", p_idhabitacion, p_fecha));
 			if (res.next())
 			{
-				System.out.println(res.getString(1));
+				//System.out.println(res.getString(1));
 				if (res.getString(1) != null)
 				{
 					estatus = res.getString(1);
@@ -113,7 +113,7 @@ public class baseDatos
 			ResultSet res = baseDatos.db.newQuery(String.format("SELECT tipo_usuario FROM usuarios WHERE idusuario = '%s' ", user_actual));
 			if (res.next())
 			{
-				System.out.println(res.getString(1));
+				//System.out.println(res.getString(1));
 				if (res.getString(1) != null)
 				{
 					nivel = res.getString(1);

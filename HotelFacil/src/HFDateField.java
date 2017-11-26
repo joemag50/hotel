@@ -22,7 +22,10 @@ public class HFDateField extends JDatePickerImpl
 	public static DateFormat fe_comp = new SimpleDateFormat("dd/MM/yyyy");
 	public static final Date DateActual = new Date();
 	public static final String FechaActual = fe_comp.format(DateActual);
-	public static final int[] ducm = new int[] {0,31,28,31,30,31,30,31,31,30,31,30,31};
+	public static final int[] ducm = new int[] {31,28,31,30,31,30,31,31,30,31,30,31};
+	public static final String[] meseseses = new String[] {"Enero","Febrero","Marzo","Abril",
+														   "Mayo","Junio","Julio","Agosto",
+														   "Septiembre","Octubre","Noviembre","Diciembre"};
 	HFDateField()
 	{
 		super((JDatePanelImpl) jdck.createJDatePanel(), new DateLabelFormatter());
