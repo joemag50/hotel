@@ -27,7 +27,7 @@ public class Menu extends MainWindow implements ActionListener, ListSelectionLis
 	{
 		//JCGE: Propiedades Generales
 		panelCentro.setLayout(null);
-		this.setExtendedState(NORMAL);
+		this.setExtendedState(MAXIMIZED_BOTH);
 		this.setTitle("Principal");                                   //Nombre de la ventana
 		checkPermisos();                                              //Revisamos los permisos del usuario
 		panelCentro.setLayout(null);                                  //Sin layout para poner los widgets

@@ -32,26 +32,19 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
 		//toolBar.setVisible(false);
 		
 		//JCGE: Propiedades especificas
+		int x = 300, y = 50;
 		JPanel p = new JPanel(new GridLayout(3, 3));
 		p.setBackground(Color.WHITE);
 		botones = new ArrayList<JButton>();
 		HFLabel piso = new HFLabel("PISO: 1");
-		piso.setBounds(200, 50, 300, 40);
+		piso.setBounds(x, y, 300, 40);
 		piso.setFont(new Font("Ubuntu Mono", Font.BOLD, 30));
 		panelInterno.add(piso);
 		int j = 1;
         for (int i = 0; i < 3 * 5; i++) {
-            if (i >= 4 && i <= 9)
+            if (i >= 5 && i <= 9)
             {
-            	HFLabel etiqueta;
-            	if (i == 4)
-            	{
-                	etiqueta = new HFLabel("      Elevador");
-            	}
-            	else
-            	{
-                	etiqueta = new HFLabel(" ");
-            	}
+            	HFLabel etiqueta = new HFLabel(" ");
             	p.add(etiqueta);
             }
             else
@@ -78,7 +71,8 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
             }
         }
         p.setVisible(true);
-        p.setBounds(200,100, 1000,600);
+        y+=50;
+        p.setBounds(x, y, 1000,600);
         panelInterno.add(p);
 	}
 	public static void actualizaGrid()

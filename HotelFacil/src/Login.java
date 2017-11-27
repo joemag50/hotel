@@ -73,7 +73,6 @@ public class Login extends MainWindow
 	{
 		String boton = arg0.getActionCommand();
 		System.out.println(boton);
-		user.setText("joemag50");
 		if (boton == "Entrar")
 		{
 			if (user.getText().length() == 0)
@@ -120,6 +119,7 @@ public class Login extends MainWindow
 		//JCGE: Lo tronamos si tiene mas de tres intentos
 		if (intentos >= 3)
 		{
+			baseDatos.logInsert(user.getText(), "Contraseña Incorrecta", "Login");
 			JOptionPane.showMessageDialog(null,"Su usuario fue suspendido por pasar 3 intentos\nContacte a su administrador.");
 			return false;
 		}

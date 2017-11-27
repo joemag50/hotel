@@ -79,6 +79,19 @@ public class baseDatos
 		}
 		return info;
 	}
+	public static int logInsert(String usu, String desc, String mod)
+	{
+		/*
+		 * JCGE: Si se portan mal o vemos algo sospechoso lo ponemos en el log
+				  idlog       SERIAL PRIMARY KEY,
+                  descripcion TEXT,
+                  modulo      TEXT,
+                  idusuario   TEXT REFERENCES usuarios (idusuario),
+                  fecha       TEXT,
+                  hora        TIME*/
+		int res = baseDatos.db.newInsert(String.format(" INSERT INTO log VALUES (DEFAULT, '%s', '%s', '%s', now()::DATE, now()::TIME) ", desc, mod, usu));
+		return res;
+	}
 	public static String estatusHabitacion(int p_idhabitacion, String p_fecha)
 	{
 		String estatus = "";

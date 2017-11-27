@@ -81,20 +81,19 @@ CREATE TABLE log (idlog       SERIAL PRIMARY KEY,
                   hora        TIME);
 
 --JCGE datos para rellenar las tablas
---INSERT INTO huespedes VALUES (DEFAULT, 'JOSE CARLOS','GAMBOA', 'ESPARZA','06/09/1996'::DATE,'90909090909','JCGE1234',DEFAULT);
---INSERT INTO usuarios VALUES ('joemag50',md5('MuseMuse50'),DEFAULT,'GAMBOA','ESPARZA','JOSE CARLOS','06/09/1996','83702083','CRUP','RFC','NSS',TRUE,'ADM');
+INSERT INTO usuarios VALUES ('admhotel',md5('123456'),DEFAULT,'GAMBOA','ESPARZA','JOSE CARLOS','06/09/1996','83702083','CRUP','RFC','NSS',TRUE,'ADM');
+INSERT INTO usuarios VALUES ('supervisor1',md5('123456'),DEFAULT,'supervisor','supervisor','supervisor','06/09/1996','83702083','CRUP','RFC','NSS',TRUE,'SUP');
+INSERT INTO usuarios VALUES ('operador1',md5('123456'),DEFAULT,'operador1','operador1','operador1','06/09/1996','83702083','CRUP','RFC','NSS',TRUE,'OPE');
+INSERT INTO usuarios VALUES ('limpieza1',md5('123456'),DEFAULT,'limpieza1','limpieza1','limpieza1','06/09/1996','83702083','CRUP','RFC','NSS',TRUE,'LIM');
 
 
---INSERT INTO habitaciones VALUES (1, 'Azul', '1', 100.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (2, 'Azul', '2', 200.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (3, 'Azul', '3', 300.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (4, 'Azul', '4', 400.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (5, 'Azul', '5', 500.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (6, 'Azul', '6', 600.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (7, 'Azul', '7', 700.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (8, 'Azul', '8', 800.00, 'Descripcion');
---INSERT INTO habitaciones VALUES (9, 'Azul', '9', 900.00, 'Descripcion');
-
---INSERT INTO precios VALUES (1, 'Habitacion sencilla', 10.0) ;
---INSERT INTO precios VALUES (2, 'Habitacion doble', 20.0) ;
---INSERT INTO precios VALUES (3, 'Habitacion VIP', 50.0) ;
+INSERT INTO habitaciones VALUES (1, 'Azul', '1', 100.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (2, 'Azul', '2', 200.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (3, 'Azul', '3', 300.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (4, 'Azul', '4', 400.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (5, 'Azul', '5', 500.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (6, 'Azul', '6', 600.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (7, 'Azul', '7', 700.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (8, 'Azul', '8', 800.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (9, 'Azul', '9', 900.00, 'Descripcion');
+INSERT INTO habitaciones VALUES (10, 'Azul', '10', 1000.00, 'Descripcion');

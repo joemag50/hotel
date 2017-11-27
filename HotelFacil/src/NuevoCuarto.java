@@ -238,7 +238,7 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 		
 		//JCGE: Botones de guardar y cancelar
 		guardar     = new JButton("Guardar");
-		cancelar    = new JButton("Cancelar");
+		cancelar    = new JButton("Volver");
 		guardar.setFont(new Font("Ubuntu Mono", Font.BOLD, 15));
 		cancelar.setFont(new Font("Ubuntu Mono", Font.BOLD, 15));
 		guardar.setBackground(Color.GREEN);
@@ -521,6 +521,7 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 	        				baseDatos.user_actual);
 	        	int res3 = baseDatos.db.newInsert(query);
 	        }
+			baseDatos.logInsert(baseDatos.user_actual, "Nueva reservacion", "Nuevo Cuarto");
 			JOptionPane.showMessageDialog(null,"Guardado correctamente: ");
 			//JCGE: Cuando acabemos todo pues cerramos esta marinola
 			limpiarEntradas();
@@ -528,7 +529,7 @@ public class NuevoCuarto extends MenuInterno implements ActionListener
 			this.setVisible(false);
 			this.dispose();
 		}
-		if (boton == "Cancelar")
+		if (boton == "Volver")
 		{
 			limpiarEntradas();
 			estatusHabitacion.actualizaAgenda();

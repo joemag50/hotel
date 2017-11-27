@@ -16,7 +16,7 @@ public class MenuInterno extends JInternalFrame
 	 */
 	private static final long serialVersionUID = 1383293379076831880L;
 	protected JPanel panelInterno;
-	protected int ext_b = MainWindow.WIDTH.intValue()-400;
+	protected int ext_b = MainWindow.WIDTH.intValue()-300;
 	protected int ext_h = MainWindow.HEIGHT.intValue()-200;
 	MenuInterno()
 	{

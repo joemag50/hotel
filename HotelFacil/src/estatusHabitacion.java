@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -80,7 +81,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		botones.add(new JButton("Crear Reservación"));
 		botones.add(new JButton("Enviar Limpieza"));
 		botones.add(new JButton("Limpieza Terminada"));
-		botones.add(new JButton("Cancelar"));
+		botones.add(new JButton("Volver"));
 		for (JButton bt: botones)
 		{
 			bt.setBounds(x, y, width, 50);
@@ -235,13 +236,13 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			botones.get(0).setEnabled(true);
 			botones.get(1).setEnabled(true);
 			botones.get(2).setEnabled(false);
-			botones.get(3).setEnabled(false);
+			botones.get(3).setEnabled(true);
 		}
 		else if (Objects.equals(nivel, new String("LIM")))
 		{
 			botones.get(0).setEnabled(false);
 			botones.get(1).setEnabled(false);
-			botones.get(2).setEnabled(false);
+			botones.get(2).setEnabled(true);
 			botones.get(3).setEnabled(true);
 		}
 		else
@@ -249,7 +250,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			botones.get(0).setEnabled(false);
 			botones.get(1).setEnabled(false);
 			botones.get(2).setEnabled(false);
-			botones.get(3).setEnabled(false);
+			botones.get(3).setEnabled(true);
 		}
 	}
 	public JPanel nuevoDia(HFLabel eti, JButton des)
@@ -269,11 +270,19 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 	{
 		String boton = arg0.getActionCommand();
 		System.out.println(boton);
+		System.out.println(""+baseDatos.nivelUsuario());
 		if (boton == "Crear Reservación")
 		{
-			NuevoCuarto nc = new NuevoCuarto();
-			MainWindow.newMenuInterno(nc);
-			nc.setSize(1170, 500);
+			if (Objects.equals(baseDatos.nivelUsuario(), new String("OPE")) || Objects.equals(baseDatos.nivelUsuario(), new String("SUP")))
+			{
+				NuevoCuarto nc = new NuevoCuarto();
+				MainWindow.newMenuInterno(nc);
+				nc.setSize(1170, 500);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"No tiene permiso para cerrar la cuenta.");
+			}
 			return;
 		}
 		if (boton == "Siguiente")
@@ -320,7 +329,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			this.dispose();
 			return;
 		}
-		if (boton == "Cancelar")
+		if (boton == "Volver")
 		{
 			//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");
 			this.setVisible(false);
@@ -331,9 +340,16 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		estatus.setText(baseDatos.estatusHabitacion(idhabitacion, boton));
 		if (Objects.equals(estatus.getText(), new String("Ocupada")))
 		{
-			Checkout co = new Checkout(boton); //JCGE: en boton tenemos una fecha
-			MainWindow.newMenuInterno(co);
-			co.setSize(950, 500);
+			if (Objects.equals(baseDatos.nivelUsuario(), new String("OPE")) || Objects.equals(baseDatos.nivelUsuario(), new String("SUP")))
+			{
+				Checkout co = new Checkout(boton); //JCGE: en boton tenemos una fecha
+				MainWindow.newMenuInterno(co);
+				co.setSize(950, 500);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null,"No tiene permiso para cerrar la cuenta.");
+			}
 			return;
 		}
 		return;

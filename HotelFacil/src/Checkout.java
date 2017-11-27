@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -7,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 public class Checkout extends NuevoCuarto implements ActionListener
@@ -22,6 +24,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 	private int idsol = 0;
 	private HFLabel total;
 	private HFDoubleField mTotal, cambio, pendiente;
+	private JButton cancelarResv;
 	Checkout(String p_fecha)
 	{
 		this.setTitle("Checkout");
@@ -144,6 +147,49 @@ public class Checkout extends NuevoCuarto implements ActionListener
 		guardar.setBounds(x, y, width, height);
 		guardar.setEnabled(false);
 		cancelar.setBounds(x + width, y, width, height);
+		
+		//JCGE: Cancelar reservacion solo cuando su permiso sea el de supervisor
+		if (Objects.equals(baseDatos.nivelUsuario(), new String("SUP")))
+		{
+			cancelarResv = new JButton("Cancelar Reservación");
+			cancelarResv.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					int respuesta = JOptionPane.showConfirmDialog(null,
+						    "¿Está totalmente seguro que desea realizar la siguiente operación?",
+						    "Confirmación",
+						    JOptionPane.YES_NO_OPTION);
+					if (respuesta == 1)
+					{
+						return;
+					}
+					//JCGE:
+					String query2 = String.format(" UPDATE hospedajes SET estatus = 3 WHERE idsolicitud = %s ", idsol);
+					int res2 = baseDatos.db.newInsert(query2);
+					if (res2 > 0)
+					{
+						baseDatos.logInsert(baseDatos.user_actual, "Cancelacion de reservacion", "Check Out");
+						JOptionPane.showMessageDialog(null, "El hospedaje fue cancelado correctamente.");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "El hospedaje NO fue cancelado, Favor de contactar a su administrador.");
+					}
+					limpiarEntradas();
+					estatusHabitacion.actualizaAgenda();
+					setVisible(false);
+					dispose();
+					return;
+				}
+			});
+			cancelarResv.setEnabled(true);
+			cancelarResv.setBounds(30, 400, 300, 50);
+			cancelarResv.setBackground(Color.YELLOW);
+			panelInterno.add(cancelarResv);
+		}
 		
 		panelInterno.add(pendiente);
 		panelInterno.add(lpendiente);
@@ -276,7 +322,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			this.dispose();
 			return;
 		}
-		if (boton == "Cancelar")
+		if (boton == "Volver")
 		{
 			limpiarEntradas();
 			estatusHabitacion.actualizaAgenda();

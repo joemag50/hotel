@@ -60,7 +60,7 @@ public class MainWindow extends JFrame implements ActionListener, MenuListener
 		this.setTitle("Main Window");
 		//this.setSize(MainWindow.WIDTH.intValue(), MainWindow.HEIGHT.intValue());
 		//this.setSize(800, 599);
-		this.setExtendedState(NORMAL);
+		this.setExtendedState(MAXIMIZED_BOTH);
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
