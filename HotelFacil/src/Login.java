@@ -76,7 +76,6 @@ public class Login extends MainWindow
 		user.setText("joemag50");
 		if (boton == "Entrar")
 		{
-			/*
 			if (user.getText().length() == 0)
 			{
 				//JCGE: le decimos que no manche, que ponga un usuario
@@ -98,16 +97,8 @@ public class Login extends MainWindow
 				Principal.ventana = new Menu();
 				Principal.ventana.finGUI();
 				//Pequeño hack para que actualice la pantalla
-				//Principal.ventana.setSize(850, 600);
+				Principal.ventana.setWindowSize(Principal.ventana, 40, 40);
 			}
-			*/
-			validaLogin();
-			baseDatos.user_actual = user.getText();
-			Principal.ventana.setVisible(false);
-			Principal.ventana.dispose();
-			Principal.ventana = new Menu();
-			Principal.ventana.finGUI();
-			Principal.ventana.setWindowSize(Principal.ventana, 40, 40);
 		}
 	}
 	public Boolean validaLogin()
