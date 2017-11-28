@@ -55,15 +55,15 @@ public class Login extends MainWindow
 		try
 		{
 		    img = ImageIO.read(new File("media/logo_hf.png"));
+			JLabel picLabel = new JLabel(new ImageIcon(img));
+			picLabel.setBounds((WIDTH.intValue()/2)-(b), y - 300, b * 2, h * 2);
+			panelCentro.add(picLabel);
 		}
 		catch (IOException e)
 		{
 			//JCGE
 			System.out.println(e.getMessage());
 		}
-		JLabel picLabel = new JLabel(new ImageIcon(img));
-		picLabel.setBounds((WIDTH.intValue()/2)-(b), y - 300, b * 2, h * 2);
-		panelCentro.add(picLabel);
 		loginBox.setBounds((WIDTH.intValue()/2)-260,y,b,h+20);
 		loginBox.setBackground(colores.get(4));
 		panelCentro.add(loginBox);

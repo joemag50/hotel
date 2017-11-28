@@ -24,6 +24,7 @@ public class Usuarios extends Menu implements ActionListener
 	{
 		//JCGE: Propiedades Generales
 		this.setTitle("Usuarios");
+		hg.setVisible(false);
 		//JCGE: Propiedades Particulares
 		tagz = new String[] {"Usuario: ","Tipo Usuario: ",
 						"Contraseña: ","Nombre: ",

@@ -19,7 +19,8 @@ import javax.swing.JTextArea;
 public class estatusHabitacion extends MenuInterno implements ActionListener
 {
 	/**
-	 * 
+	 * JCGE: Esta es la clase Buenera del programa
+	 * Aqui revisamos si esta ocupada, disponible
 	 */
 	private static final long serialVersionUID = -5755987432527688807L;
 	private HFTextField        estatus;
@@ -36,6 +37,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 	private JButton siguiente, anterior;
 	private HFLabel mes;
 	protected static int MESActual = Integer.parseInt(HFDateField.mes.format(HFDateField.DateActual));
+	//JCGE: ANA por que ANO suena bien feo
 	protected static int ANActual = Integer.parseInt(HFDateField.ejercicio.format(HFDateField.DateActual));
 	int habitacionDiaHoy = 0;
 	estatusHabitacion(String habitacion)
@@ -45,14 +47,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		
 		//JCGE: Propiedades de la ventana
 		this.setTitle("Estatus Habitación");
-		//this.setExtendedState(NORMAL);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		//this.setLocationRelativeTo(null);
-		
-		//panelCentro.setLayout(null);
-		//menuBar.setVisible(false);
-		//String[] nombres = {"Salir"};
-		//rellenaToolBar(nombres, this);
 		
 		//JCGE: Propiedades adentro de la ventana
 		int x = 30, y = 30, width = 300, height = 30;
@@ -86,7 +81,6 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		{
 			bt.setBounds(x, y, width, 50);
 			bt.addActionListener(this);
-			//panelCentro.add(bt);
 			panelInterno.add(bt);
 			y+=60;
 		}
@@ -116,6 +110,8 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		descrip = new ArrayList<JButton>();
 		dias = new ArrayList<JPanel>();
 		
+		//JCGE: Todo este desmadre tambien esta en una funcion
+		//Pero tiene lo que la inicia dentro del ARRAYLIST
 		int dia = 0,
 				mez = MESActual,
 				ejercicio = ANActual;
@@ -123,16 +119,16 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		{
 			dia++;
 			//JCGE: Metemos lo necesario en cada dia de la agenda
-				if ((dia-1 == HFDateField.ducm[mez-1]) || (dia == 30 && mez == 2 && ejercicio % 4 == 0) || (dia == 29 && mez == 2 && ejercicio % 4 != 0))
+			if ((dia-1 == HFDateField.ducm[mez-1]) || (dia == 30 && mez == 2 && ejercicio % 4 == 0) || (dia == 29 && mez == 2 && ejercicio % 4 != 0))
+			{
+				dia = 1; mez += 1;
+				if ((mez) == 13)
 				{
-					dia = 1; mez += 1;
-					if ((mez) == 13)
-					{
-						mez = 1;
-						dia = 1;
-						ejercicio++;
-					}
+					mez = 1;
+					dia = 1;
+					ejercicio++;
 				}
+			}
 			etiquetas.add(new HFLabel(""+dia));
 			descrip.add(new JButton());
 			String fecha = String.format("'%s/%s/%s'", dia, mez, ejercicio);
@@ -156,6 +152,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			{
 				habitacionDiaHoy = descrip.size()-1;
 			}
+			//JCGE: Metemos el nuevo dia dentro del calendario
 			dias.add(nuevoDia(etiquetas.get(etiquetas.size()-1),
 											descrip.get(descrip.size()-1)));
 			agenda.add(dias.get(dias.size()-1));
@@ -171,11 +168,15 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		panelInterno.add(desc);
 		panelInterno.add(lEstatus);
 		panelInterno.add(estatus);
+		
 		//JCGE: bloqueamos o mostramos dependiendo el permiso
 		permisos();
+		
+		//JCGE: Mostramos la informacion de la habitacion
 		estatus.setText(baseDatos.estatusHabitacion(idhabitacion, "now()"));
 		desc.setText(baseDatos.masInfoHabitacion(idhabitacion, "now()"));
 	}
+	//JCGE: Funcion para actualizar la agenda mamalona
 	public static void actualizaAgenda()
 	{
 		int dia = 0,
@@ -185,16 +186,16 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		{
 			dia++;
 			//JCGE: Metemos lo necesario en cada dia de la agenda
-				if ((dia-1 == HFDateField.ducm[mez-1] && mez !=2 ) || (dia == 30 && mez == 2 && ejercicio % 4 == 0) || (dia == 29 && mez == 2 && ejercicio % 4 != 0))
+			if ((dia-1 == HFDateField.ducm[mez-1] && mez !=2 ) || (dia == 30 && mez == 2 && ejercicio % 4 == 0) || (dia == 29 && mez == 2 && ejercicio % 4 != 0))
+			{
+				dia = 1; mez += 1;
+				if ((mez) == 13)
 				{
-					dia = 1; mez += 1;
-					if ((mez) == 13)
-					{
-						mez=1;
-						dia=1;
-						ejercicio++;
-					}
+					mez=1;
+					dia=1;
+					ejercicio++;
 				}
+			}
 			String fecha = String.format("'%s/%s/%s'", dia, mez, ejercicio);
 			String estatus = baseDatos.estatusHabitacion(idhabitacion, fecha);
 			etiquetas.get(i).setText(""+dia);
@@ -214,6 +215,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			}
 		}
 	}
+	//JCGE: Funcion que depende de tus permisos puedes ver los botones
 	public void permisos()
 	{
 		String nivel = baseDatos.nivelUsuario();
@@ -253,6 +255,7 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 			botones.get(3).setEnabled(true);
 		}
 	}
+	//JCGE: Lo que nos regresa es el panel con el boton de la agenda
 	public JPanel nuevoDia(HFLabel eti, JButton des)
 	{
 		JPanel panelsito = new JPanel();
@@ -264,13 +267,11 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		panelsito.add(des);
 		return panelsito;
 	}
-	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
+	//JCGE: funcion que evalua los clics
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{
 		String boton = arg0.getActionCommand();
-		System.out.println(boton);
-		System.out.println(""+baseDatos.nivelUsuario());
 		if (boton == "Crear Reservación")
 		{
 			if (Objects.equals(baseDatos.nivelUsuario(), new String("OPE")) || Objects.equals(baseDatos.nivelUsuario(), new String("SUP")))
@@ -278,10 +279,11 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 				NuevoCuarto nc = new NuevoCuarto();
 				MainWindow.newMenuInterno(nc);
 				nc.setSize(1170, 500);
+				super.bloqueaEsto(true);
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(null,"No tiene permiso para cerrar la cuenta.");
+				JOptionPane.showMessageDialog(null,"No tiene permiso para crear reservación.");
 			}
 			return;
 		}
@@ -331,11 +333,13 @@ public class estatusHabitacion extends MenuInterno implements ActionListener
 		}
 		if (boton == "Volver")
 		{
-			//JOptionPane.showMessageDialog(null,"Warning: Los cambios no confirmados... no serán guardados.");
 			this.setVisible(false);
 			this.dispose();
 			return;
 		}
+		//JCGE: Esta parte es por si le da click a un boton dentro de la agenda
+		//Actualizamos la parte de la informacion de la habitacion
+		//Y revisamos si puede cerrar la cuenta o ver cuanto va a pagar
 		desc.setText(baseDatos.masInfoHabitacion(idhabitacion, boton));
 		estatus.setText(baseDatos.estatusHabitacion(idhabitacion, boton));
 		if (Objects.equals(estatus.getText(), new String("Ocupada")))

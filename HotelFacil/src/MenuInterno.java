@@ -39,4 +39,8 @@ public class MenuInterno extends JInternalFrame
 			e.printStackTrace();
 		}
 	}
+	public void bloqueaEsto(boolean enab)
+	{
+		panelInterno.setEnabled(!enab);
+	}
 }

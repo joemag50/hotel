@@ -32,6 +32,7 @@ public class baseDatos
 		{
 			try
 			{
+				//JCGE: Buscamos la clase necesaria para conectarnos a la base de Datos
 				Class.forName("java.sql.Driver");
 			}
 			catch (ClassNotFoundException e)
@@ -54,6 +55,7 @@ public class baseDatos
 			e.printStackTrace();
 		}
 	}
+	//JCGE: A continuacion funciones para buscar en la base de datos con consultas comunes
 	public static String masInfoHabitacion(int p_idhabitacion, String p_fecha)
 	{
 		String info = "";
@@ -62,7 +64,6 @@ public class baseDatos
 			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_hospedaje_info(%s, %s::DATE)", p_idhabitacion, p_fecha));
 			if (res.next())
 			{
-				//System.out.println(res.getString(1));
 				if (res.getString(1) != null)
 				{
 					info = res.getString(1);
@@ -79,6 +80,7 @@ public class baseDatos
 		}
 		return info;
 	}
+	//JCGE: Funcion para insertar en el log comportamientos sensibles
 	public static int logInsert(String usu, String desc, String mod)
 	{
 		/*
@@ -92,6 +94,7 @@ public class baseDatos
 		int res = baseDatos.db.newInsert(String.format(" INSERT INTO log VALUES (DEFAULT, '%s', '%s', '%s', now()::DATE, now()::TIME) ", desc, mod, usu));
 		return res;
 	}
+	//JCGE: Estatus de la habitacion a la fecha de consulta
 	public static String estatusHabitacion(int p_idhabitacion, String p_fecha)
 	{
 		String estatus = "";
@@ -100,7 +103,6 @@ public class baseDatos
 			ResultSet res = baseDatos.db.newQuery(String.format("SELECT * FROM hotel_habitacion_estatus(%s, %s::DATE)", p_idhabitacion, p_fecha));
 			if (res.next())
 			{
-				//System.out.println(res.getString(1));
 				if (res.getString(1) != null)
 				{
 					estatus = res.getString(1);
@@ -171,6 +173,7 @@ public class baseDatos
 		}
 		return null;
 	}
+	//JCGE: Nuevo Insert
 	public int newInsert(String query)
 	{
 		try
@@ -210,6 +213,7 @@ public class baseDatos
 		}
 	}
 	//JCGE: Con esta funcion convertimos un texto a md5 por seguridad
+	//JCGE: Esta funcion ya no la vamos a usar
 	public String utilMd5 (String unTexto)
 	{
         MessageDigest m = null;

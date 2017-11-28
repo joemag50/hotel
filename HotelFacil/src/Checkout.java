@@ -16,6 +16,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 	/**
 	 * JCGE: Modulo de Checkout
 	 * Aqui vamos a despedir a nuestro inquilino o alargarle la visita
+	 * Heredamos desde NuevoCuarto, ya tiene todos los componentes, solo movemos unas cosas
 	 */
 	private static final long serialVersionUID = -4467762444239765332L;
 	private ResultSet r;
@@ -27,7 +28,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 	private JButton cancelarResv;
 	Checkout(String p_fecha)
 	{
-		this.setTitle("Checkout");
+		this.setTitle("Check Out");
 		buscar.setVisible(false);
 		esNuevo.setVisible(false);
 		idhuesped.setEnabled(false);
@@ -37,6 +38,8 @@ public class Checkout extends NuevoCuarto implements ActionListener
 		lFechaIni.setVisible(false);
 		lFechaFin.setVisible(false);
 		huespedes.setVisible(false);
+		//JCGE: Vamos a buscar la solicitud buscando la
+		//fecha que seleccionó y la habitacion en la que se encuentra buscando
 		try
 		{
 			solicitud = baseDatos.db.newQuery(String.format(" SELECT * "
@@ -46,6 +49,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 					  									  estatusHabitacion.idhabitacion, p_fecha));
 			if (!solicitud.next())
 			{
+				//JCGE: No encontro, se sale
 				this.setVisible(false);
 				this.dispose();
 				return;
@@ -57,6 +61,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 												  + "  WHERE idhuesped = %s ", idhue));
 			if (r.next())
 			{
+				//Vaciamos y rellenamos con la info del huesped titular actual
 				limpiarEntradas();
 				idhuesped.setText(idhue+"");
 				int i = 1;
@@ -81,6 +86,8 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			}
 			else
 			{
+				//JCGE: No lo encuentra... no mostramos la ventana
+				//Esto no puede suceder
 				this.setVisible(false);
 				this.dispose();
 				return;
@@ -93,6 +100,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			this.dispose();
 			return;
 		}
+		//JGE: Actualizamos los cobros
 		cobrosActuales();
 		
 		//JCGE: Vamos agregar unas casillas con lo que debe
@@ -149,6 +157,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 		cancelar.setBounds(x + width, y, width, height);
 		
 		//JCGE: Cancelar reservacion solo cuando su permiso sea el de supervisor
+		//JCGE: No se si tambien el admin, no creo
 		if (Objects.equals(baseDatos.nivelUsuario(), new String("SUP")))
 		{
 			cancelarResv = new JButton("Cancelar Reservación");
@@ -200,6 +209,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 		panelInterno.add(total);
 		panelInterno.add(mTotal);
 	}
+	//JCGE: Actualizar los cobros actuales
 	private void cobrosActuales()
 	{
 		System.out.println(""+idsol);
@@ -218,6 +228,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 			e.printStackTrace();
 		}
 	}
+	//JCGE: Sumamos los abonos actuales
 	private Double sumaAbonos()
 	{
 		Double suma = 0.0;
@@ -234,6 +245,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
 		}
 		return suma;
 	}
+	//JCGE: Sumamos los cobros actuales
 	private Double sumaCobros()
 	{
 		Double suma = 0.0;
@@ -244,6 +256,7 @@ public class Checkout extends NuevoCuarto implements ActionListener
         }
 		return suma;
 	}
+	//JCGE: Acciones de los botones
 	@Override
 	public void actionPerformed(ActionEvent arg0)
 	{

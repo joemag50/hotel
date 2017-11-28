@@ -9,7 +9,6 @@ import javax.swing.Action;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -18,17 +17,18 @@ import javax.swing.event.ListSelectionListener;
 
 public class buscador extends JFrame implements Action, ListSelectionListener, KeyListener
 {
-	/**
-	 * 
-	 */
+	/*
+	 * JCGE: Clase que muestra una pantalla con la busqueda obtenida desde el HFTextField 
+	 * */
 	private static final long serialVersionUID = 2109227608072651896L;
-	//
+	
 	protected Container     frame;
 	private   JList<String> lista;
 	private   JTextField    campo;
 	private   JTextField    retorno;
 	private   JFormattedTextField    retorno2;
-	public static   JList<String> listaRetorno;
+	
+	//JCGE: Son varios constructores dependiendo de lo que se necesitaba
 	buscador(String buscador, String query, JTextField entrada)
 	{
 		this(buscador, query, entrada, null);
@@ -39,22 +39,12 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 	}
 	buscador(String buscador, String query, JTextField entrada, JTextField salida, JFormattedTextField salida2)
 	{
-		this(buscador, query, entrada, salida, salida2, null);
-	}
-	buscador(String buscador, String query, JList<String> listaSalida)
-	{
-		this(buscador, query, null, null, null, listaSalida);
-	}
-	buscador(String buscador, String query, JTextField entrada, JTextField salida, JFormattedTextField salida2, JList<String> listaSalida)
-	{
 		frame = getContentPane();
 		frame.setLayout(null);
 		//JCGE: Preparamos la ventana
 		this.setTitle("Buscador");
 		this.setSize(300, 500);
-		//this.setSize(800, 599);
 		this.setResizable(false);
-		//this.setExtendedState(MAXIMIZED_BOTH);
 		this.setVisible(true);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -89,17 +79,7 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		lista.setVisibleRowCount(5);
 		lista.addListSelectionListener(this);
 		lista.setSelectedIndex(0);
-		if (listaSalida != null)
-		{
-			System.out.println("Paso POR aqui");
-			listaRetorno = listaSalida;
-			lista.addKeyListener(klisn);
-		}
-		else
-		{
-			lista.addKeyListener(this);
-		}
-		//lista.addFocusListener(fe);
+		lista.addKeyListener(this);
 		lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane scroll = new JScrollPane(lista);
 		HFLabel titulo = new HFLabel(buscador);
@@ -110,36 +90,6 @@ public class buscador extends JFrame implements Action, ListSelectionListener, K
 		frame.add(scroll);
 		frame.add(titulo);
 	}
-	private KeyListener klisn = new KeyListener() {
-		@Override
-		public void keyPressed(KeyEvent arg0)
-		{
-			if (arg0.getKeyCode() == 10)
-			{
-				//JCGE: Le vamos a meter a la lista lo que nosotros seleccionamos	
-				if (lista.getSelectedValue() != null)
-					if (lista.getSelectedValue().toString().trim() != "")
-					{	
-						/*
-						if (!NuevoCuarto.existeHuesped(lista.getSelectedValue().toString().trim()))
-						{
-							NuevoCuarto.nuevoHuesped(lista.getSelectedValue().toString().trim());
-						}
-						else
-						{
-							JOptionPane.showMessageDialog(null, "Ya existe este registro.");
-						}
-						*/
-					}
-				buscador.this.setVisible(false);
-				buscador.this.dispose();
-			}
-		}
-		@Override
-		public void keyReleased(KeyEvent e) {/*JCGE: No hay nada*/}
-		@Override
-		public void keyTyped(KeyEvent e) {/*JCGE: No hay nada*/}
-	};
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{

@@ -15,7 +15,7 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
 {
 	/**
 	 * JCGE: Modulo de habitacionesGrid
-	 * 
+	 *  Este modulo es donde todos van a entrar y ver las habitaciones
 	 */
 	private static final long serialVersionUID = -1400423738500557806L;
 	public static ArrayList<JButton> botones ;
@@ -26,10 +26,6 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
 		//JCGE: Propiedades de ventana
 		this.setTitle("Menu");
 		this.setClosable(false);
-		//this.setExtendedState(MAXIMIZED_BOTH);
-		//this.setLocationRelativeTo(null);
-		//panelCentro.setLayout(null);
-		//toolBar.setVisible(false);
 		
 		//JCGE: Propiedades especificas
 		int x = 300, y = 50;
@@ -51,7 +47,7 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
             {
             	botones.add(new JButton("Habitacion: " + j));
             	botones.get(botones.size()-1).setBackground(MainWindow.colores.get(4));
-            	botones.get(botones.size()-1).addActionListener(actionLins);
+            	botones.get(botones.size()-1).addActionListener(this);
 				String query = String.format(" SELECT limpiar FROM habitaciones WHERE idhabitacion = %s ", j);
 				ResultSet r = baseDatos.db.newQuery(query);
 				try {
@@ -98,25 +94,11 @@ public class habitacionesGrid extends MenuInterno implements ActionListener
 			j++;
 		}
 	}
-	//JCGE: Este metodo es privado, porque solo quiero que aplique para esta clase en especifico
-	private ActionListener actionLins = new ActionListener()
-	{
-		@Override
-		public void actionPerformed(ActionEvent arg0)
-		{
-			String boton = arg0.getActionCommand();
-			//System.out.println(boton);
-			//JCGE: Cuando de click siempre va a mostrar
-			MainWindow.newMenuInterno(new estatusHabitacion(boton));
-			//estHab.finGUI();
-			//estHab.setWindowSize(estHab, 400, 200);
-			//estHab.setSize(MainWindow.WIDTH.intValue()-400, MainWindow.HEIGHT.intValue()-200);
-		}
-		
-	};
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent arg0)
+	{
+		String boton = arg0.getActionCommand();
+		//JCGE: Cuando de click siempre va a mostrar
+		MainWindow.newMenuInterno(new estatusHabitacion(boton));
 	}
 }

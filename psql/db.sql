@@ -38,7 +38,7 @@ CREATE TABLE usuarios (idusuario       TEXT NOT NULL PRIMARY KEY,
                        rfc             TEXT,
                        nss             TEXT,
                        activo          BOOLEAN NOT NULL DEFAULT TRUE,
-                       tipo_usuario    TEXT NOT NULL DEFAULT 'OPE');  --ADM: administrador, SUP: supervisor, AUD: auditor, OPE: operador
+                       tipo_usuario    TEXT NOT NULL DEFAULT 'OPE');  --ADM: administrador, SUP: supervisor, OPE: operador
 
 -- -------------------------------------------------------------
 -- JCGE: Esta es la relacion de el titular con la solicitud de habitacion

@@ -7,7 +7,7 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 public class DateLabelFormatter extends AbstractFormatter
 {
     /**
-	 * 
+	 * JCGE: Esta clase es para darle formato a los campos de fecha
 	 */
 	private static final long serialVersionUID = -2590119436440629511L;
 	private String datePattern = "dd/MM/yyyy";
